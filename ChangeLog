@@ -1,8 +1,10 @@
+1.2.4 - work in progress
+
+
 1.2.3 - 2005.09.11
     * Added FreeBSD, NetBSD, OpenBSD support
     * Replaced autotools with plain makefile(s)
     * Added 'suspend' command (untested, we don't use it)
-    * add %theme variable in login_cmd
     * Added support for %theme variable in login command
 	
 1.2.2 - 2005.05.21
