@@ -1,0 +1,43 @@
+1.2.3 - 2005.09.11
+    * Added FreeBSD, NetBSD, OpenBSD support
+    * Replaced autotools with plain makefile(s)
+    * Added 'suspend' command (untested, we don't use it)
+    * add %theme variable in login_cmd
+    * Added support for %theme variable in login command
+	
+1.2.2 - 2005.05.21
+    * fix panel drawing on screens <= 1024x768
+    * Don't start X server unless valid theme found
+    * revert to 'default' of invalid theme specified
+    * try all themes from a set if one doesn't work
+    
+1.2.1 - 2005.05.17
+    * draw input directly on panel
+
+1.2.0 - 2005.05.16
+    * added theme preview (slim -p /path/to/theme)
+    * added JPEG support for panel image
+    * added 'center' background type and 'background_color' option
+    * added text shadow
+    * added warning when execution of login command fails
+    * Fix login failure when no shell specified in /etc/passwd
+    * Print error when login command execution fails
+    * add XNEST_DEBUG ifdef's to allow for easy debugging
+    * Add support for Ctrl-u and Ctrl-w
+    * Add 'vt07' to server arguments if not already specified
+    * Removes daemon option from the config file. Use slim -d
+    * Allow 'current_theme' to be a set of themes, choose randomly
+    * Change default theme
+
+1.1.0 - 2004.12.09
+    * error messages for X11 apps are no longer redirected
+      to the log file
+    * fixed text position for default theme
+    * added configurable shutdown and reboot messages
+    * separated 'Enter username' and 'Enter password' messages
+      position.
+    * due to the previous two points, the theme format has 
+      slightly changed
+    
+1.0.0 - 2004.12.07
+    * First public SLiM release

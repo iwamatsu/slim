@@ -1,0 +1,16 @@
+case $1 in
+icewm)
+	icewmbg &
+	icewmtray &
+	exec icewm
+	;;
+wmaker)
+	exec wmaker
+	;;
+blackbox)
+	exec blackbox
+	;;
+*)
+	exec twm
+	;;
+esac

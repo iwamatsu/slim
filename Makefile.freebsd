@@ -1,0 +1,65 @@
+# Makefile for slim - FreeBSD 4 and 5
+#
+# Edit the following section to adjust the options
+# to fit into your operating system / distribution
+#######################################################
+CXX=/usr/bin/g++
+CC=/usr/bin/gcc
+CFLAGS=-I. -I/usr/X11R6/include -I/usr/local/include/freetype2 -I/usr/local/include/freetype2/config -I/usr/local/include/libpng -I/usr/local/include -I/usr/include
+CXXLAGS=$(CFLAGS)
+LDFLAGS=-L/usr/X11R6/lib -L/usr/local/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lcrypt -lXpm -lXmu -lpng -ljpeg
+CUSTOM=-DNEEDS_BASENAME
+PREFIX=/usr
+CFGDIR=/etc
+MANDIR=/usr/share/man
+DESTDIR=
+#######################################################
+
+NAME=slim
+VERSION=1.2.3
+
+DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
+		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
+
+OBJECTS=jpeg.o png.o main.o image.o cfg.o switchuser.o input.o app.o panel.o
+
+all: slim
+
+slim: $(OBJECTS) 
+	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
+
+.cpp.o:
+	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
+
+.c.o:
+	$(CC) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
+
+install: slim install-theme
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(MANDIR)/man1
+	install -d $(DESTDIR)$(CFGDIR)
+	install -m 755 slim $(DESTDIR)$(PREFIX)/bin
+	install -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1
+	install -m 644 slim.conf $(DESTDIR)$(CFGDIR)
+
+clean:
+	@rm -f slim *.o
+
+dist:
+	@rm -rf $(NAME)-$(VERSION)
+	@mkdir $(NAME)-$(VERSION)
+	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog README TODO \
+		xinitrc.sample slim.1 THEMES themes slim.conf $(NAME)-$(VERSION)
+	@rm -rf $(NAME)-$(VERSION)/themes/.svn	$(NAME)-$(VERSION)/themes/default/.svn
+	@tar cvzf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
+	@rm -rf $(NAME)-$(VERSION)
+
+install-theme:
+	install -d -m 755 themes/default \
+		 $(DESTDIR)$(PREFIX)/share/slim/themes/default
+	install -m 644 themes/default/slim.theme \
+		 $(DESTDIR)$(PREFIX)/share/slim/themes/default/slim.theme
+	install -m 644 themes/default/panel.png \
+		 $(DESTDIR)$(PREFIX)/share/slim/themes/default/panel.png
+	install -m 644 themes/default/background.jpg \
+		 $(DESTDIR)$(PREFIX)/share/slim/themes/default/background.jpg

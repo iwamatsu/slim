@@ -1,0 +1,23 @@
+INSTALL file for SLiM
+
+0. Prerequisites:
+ - X.org or XFree86
+ - libpng
+ - libjpeg
+
+1. to build and install the program:
+ - edit the Makefile to adjust libraries and paths to your OS.
+ - make
+ - make install
+ 
+Pre-configured makefiles for some platform are available,
+i.e. for FreeBSD use:
+	- make -f Makefile.freebsd
+	- make -f Makefile.freebsd install
+
+2. automatic startup
+Edit the init scripts according to your OS/Distribution.
+
+
+
+
