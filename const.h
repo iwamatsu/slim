@@ -48,5 +48,7 @@
 #define SESSION_VAR     "%session"
 #define THEME_VAR       "%theme"
 
-#endif
+// variables replaced in pre-session_cmd and post-session_cmd
+#define USER_VAR       "%user"
 
+#endif

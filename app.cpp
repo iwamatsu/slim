@@ -311,9 +311,14 @@ void App::Login() {
         // Login process starts here
         SwitchUser Su(pw, &cfg, DisplayName);
         string session = LoginPanel->getSession();
-	string loginCommand = cfg.getOption("login_cmd");
+        string loginCommand = cfg.getOption("login_cmd");
         replaceVariables(loginCommand, SESSION_VAR, session);
         replaceVariables(loginCommand, THEME_VAR, themeName);
+        string sessStart = cfg.getOption("sessionstart_cmd");
+        if (sessStart != "") {
+            replaceVariables(sessStart, USER_VAR, pw->pw_name);
+            system(sessStart.c_str());
+        }
         Su.Login(loginCommand.c_str());
         exit(OK_EXIT);
     }
@@ -330,6 +335,12 @@ void App::Login() {
     }
     if (WIFEXITED(status) && WEXITSTATUS(status)) {
         LoginPanel->Message("Failed to execute login command");
+    } else {
+         string sessStop = cfg.getOption("sessionstop_cmd");
+         if (sessStop != "") {
+            replaceVariables(sessStop, USER_VAR, pw->pw_name);
+            system(sessStop.c_str());
+        }
     }
 
     // Close all clients

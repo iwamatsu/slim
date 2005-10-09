@@ -1,4 +1,6 @@
 1.2.4 - work in progress
+    * Added commands for session start and stop
+      (i.e. for session registering)
 
 
 1.2.3 - 2005.09.11
