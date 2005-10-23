@@ -45,7 +45,7 @@ clean:
 dist:
 	@rm -rf $(NAME)-$(VERSION)
 	@mkdir $(NAME)-$(VERSION)
-	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog README TODO \
+	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog INSTALL README TODO \
 		xinitrc.sample slim.1 THEMES themes slim.conf $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)/themes/.svn	$(NAME)-$(VERSION)/themes/default/.svn
 	@tar cvzf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
