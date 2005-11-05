@@ -42,7 +42,7 @@ char Input::Key(char ascii, KeySym keysym, bool singleInputMode) {
         } else {
             Field = GET_NAME;
         }
-    } else if(keysym == XK_Return) {
+    } else if(keysym == XK_Return || keysym == XK_KP_Enter) {
         if(!strcmp(NameBuffer, ""))
             return tmp;
 

@@ -1,7 +1,8 @@
 1.2.4 - work in progress
     * Added commands for session start and stop
       (i.e. for session registering)
-
+	* Added automatic numlock on/off option
+	* Support for numpad Enter key
 
 1.2.3 - 2005.09.11
     * Added FreeBSD, NetBSD, OpenBSD support

@@ -21,6 +21,7 @@
 #include <vector>
 #include <algorithm>
 #include "app.h"
+#include "numlock.h"
 #include "image.h"
 
 
@@ -593,7 +594,14 @@ int App::StartServer() {
         break;
     }
 
-    delete args;
+    string numlock = cfg.getOption("numlock");
+    if (numlock == "on") {
+        NumLock::setOn();
+    } else if (numlock == "off") {
+        NumLock::setOff();
+	}
+    
+	delete args;
 
     return ServerPID;
 }

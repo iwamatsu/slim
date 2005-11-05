@@ -16,12 +16,12 @@ DESTDIR=
 #######################################################
 
 NAME=slim
-VERSION=1.2.3
+VERSION=1.2.4
 
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
-OBJECTS=jpeg.o png.o main.o image.o cfg.o switchuser.o input.o app.o panel.o
+OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o input.o app.o panel.o
 
 all: slim
 

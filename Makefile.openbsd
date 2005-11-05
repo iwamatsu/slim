@@ -16,7 +16,7 @@ DESTDIR=
 #######################################################
 
 NAME=slim
-VERSION=1.2.3
+VERSION=1.2.4
 
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
@@ -35,6 +35,9 @@ main.o:
 
 image.o:
 	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c image.cpp -o $@
+
+numlock.o:
+	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c numlock.cpp -o $@
 
 cfg.o:
 	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c cfg.cpp -o $@
