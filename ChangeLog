@@ -3,6 +3,8 @@
       (i.e. for session registering)
 	* Added automatic numlock on/off option
 	* Support for numpad Enter key
+	* restored support for daemon option in the config
+	  file.
 
 1.2.3 - 2005.09.11
     * Added FreeBSD, NetBSD, OpenBSD support

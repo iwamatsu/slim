@@ -1,6 +1,6 @@
 /* SLiM - Simple Login Manager
-   Copyright (C) 2004-05 Simone Rota <sip@varlock.com>
-   Copyright (C) 2004-05 Johannes Winkelmann <jw@tks6.net>
+   Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
+   Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
       
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

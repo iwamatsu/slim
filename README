@@ -21,7 +21,7 @@ INSTALLATION
     
 USAGE
 
-	To launch slim, execute run the slim binary,
+    To launch slim, execute run the slim binary,
     followed by the -d option if you want it to
     run as a daemon in the background (reccommended)
     
@@ -47,7 +47,7 @@ THEMES
     See THEMES
 
 COPYRIGHT
-    SLiM is copyright (c) 2004-05 by Simone Rota, Johannes Winkelmann
+    SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann
     and is available under the GNU General Public License.
     See the COPYING file for the complete license.
 
