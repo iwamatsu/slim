@@ -17,6 +17,8 @@
 #include <cstring>
 #include <cstdio>
 
+#include <iostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <algorithm>
@@ -723,17 +725,40 @@ void App::setBackground(const string& themedir) {
     XFlush(Dpy);
 }
 
-// Lock or die!
+// Check if there is a lockfile and a corresponding process
 void App::GetLock() {
-    int fd;
-    fd=open(cfg.getOption("lockfile").c_str(),O_WRONLY | O_CREAT | O_EXCL);
-    if (fd<0 && errno==EEXIST) {
-        cerr << APPNAME << ": It appears there is another instance of the program already running" <<endl
-            << "If not, try to remove the lockfile: " << cfg.getOption("lockfile") <<endl;
-        exit(ERR_EXIT);
-    } else if (fd < 0) {
-        cerr << APPNAME << ": Could not accesss lock file: " << cfg.getOption("lockfile") << endl;
-        exit(ERR_EXIT);
+    std::ifstream lockfile(cfg.getOption("lockfile").c_str());
+    if (!lockfile) {
+        // no lockfile present, create one
+        std::ofstream lockfile(cfg.getOption("lockfile").c_str(), ios_base::out);
+        if (!lockfile) {
+            cerr << APPNAME << ": Could not create lock file: " << cfg.getOption("lockfile").c_str() << std::endl;
+            exit(ERR_EXIT);
+        }
+        lockfile << getpid() << std::endl;
+        lockfile.close();
+    } else {
+        // lockfile present, read pid from it
+        int pid = 0;
+        lockfile >> pid;
+        lockfile.close();
+        if (pid > 0) {
+            // see if process with this pid exists
+            int ret = kill(pid, 0);
+            if (ret == 0 || (ret == -1 && errno == EPERM) ) {
+                cerr << APPNAME << ": Another instance of the program is already running with PID " << pid << std::endl;
+                exit(0);
+            } else {
+                cerr << APPNAME << ": Stale lockfile found, removing it" << std::endl;
+                std::ofstream lockfile(cfg.getOption("lockfile").c_str(), ios_base::out);
+                if (!lockfile) {
+                    cerr << APPNAME << ": Could not create new lock file: " << cfg.getOption("lockfile") << std::endl;
+                    exit(ERR_EXIT);
+                }
+                lockfile << getpid() << std::endl;
+                lockfile.close();
+            }
+        }
     }
 }
 
