@@ -1,10 +1,12 @@
-1.2.4 - work in progress
+1.2.4 - 2006.01.18
     * Added commands for session start and stop
       (i.e. for session registering)
-	* Added automatic numlock on/off option
-	* Support for numpad Enter key
-	* restored support for daemon option in the config
-	  file.
+    * Added automatic numlock on/off option
+    * Support for numpad Enter key
+    * Restored support for daemon option in the config
+      file.
+    * Lock file now uses process id, no more false
+      locking (thanks to Tobias Roth)
 
 1.2.3 - 2005.09.11
     * Added FreeBSD, NetBSD, OpenBSD support
