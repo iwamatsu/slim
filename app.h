@@ -51,9 +51,9 @@ private:
     void HideCursor();
 
     static std::string findValidRandomTheme(const std::string& set);
-    static void App::replaceVariables(std::string& input,
-				      const std::string& var,
-				      const std::string& value);
+    static void replaceVariables(std::string& input,
+                                 const std::string& var,
+                                 const std::string& value);
 
     // Server functions
     int StartServer();
@@ -76,7 +76,7 @@ private:
     XpmAttributes BackgroundPixmapAttributes;
     Pixmap BackgroundPixmap;
 
-    void App::blankScreen();
+    void blankScreen();
     void setBackground(const string& themedir);
 	
     bool daemonmode;
