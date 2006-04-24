@@ -37,7 +37,8 @@ slim: $(OBJECTS)
 install: slim install-theme
 	install -D -m 755 slim $(DESTDIR)$(PREFIX)/bin/slim
 	install -D -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1/slim.1
-	install -D -m 644 slim.conf $(DESTDIR)$(CFGDIR)/slim.conf
+	test -e $(DESTDIR)$(CFGDIR)/slim.conf || \
+		install -D -m 644 slim.conf $(DESTDIR)$(CFGDIR)/slim.conf
 
 clean:
 	@rm -f slim *.o

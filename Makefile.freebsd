@@ -40,7 +40,8 @@ install: slim install-theme
 	install -d $(DESTDIR)$(CFGDIR)
 	install -m 755 slim $(DESTDIR)$(PREFIX)/bin
 	install -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1
-	install -m 644 slim.conf $(DESTDIR)$(CFGDIR)
+	test -e $(DESTDIR)$(CFGDIR)/slim.conf || \
+		install -m 644 slim.conf $(DESTDIR)$(CFGDIR)
 
 clean:
 	@rm -f slim *.o

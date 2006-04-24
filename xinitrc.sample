@@ -1,4 +1,7 @@
 case $1 in
+xfce4)
+	exec startxfce4
+	;;
 icewm)
 	icewmbg &
 	icewmtray &
