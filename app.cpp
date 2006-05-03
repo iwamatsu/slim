@@ -291,17 +291,19 @@ int App::GetServerPID() {
 
 // Hide the cursor
 void App::HideCursor() {
-	XColor		    black;
-	char		    cursordata[1];
-	Pixmap		    cursorpixmap;
-	Cursor		    cursor;
-	cursordata[0]=0;
-	cursorpixmap=XCreateBitmapFromData(Dpy,Root,cursordata,1,1);
-	black.red=0;
-	black.green=0;
-	black.blue=0;
-	cursor=XCreatePixmapCursor(Dpy,cursorpixmap,cursorpixmap,&black,&black,0,0);
-	XDefineCursor(Dpy,Root,cursor);
+	if (cfg.getOption("hidecursor") == "true") {
+		XColor		    black;
+		char		    cursordata[1];
+		Pixmap		    cursorpixmap;
+		Cursor		    cursor;
+		cursordata[0]=0;
+		cursorpixmap=XCreateBitmapFromData(Dpy,Root,cursordata,1,1);
+		black.red=0;
+		black.green=0;
+		black.blue=0;
+		cursor=XCreatePixmapCursor(Dpy,cursorpixmap,cursorpixmap,&black,&black,0,0);
+		XDefineCursor(Dpy,Root,cursor);
+	}
 }
 
 void App::Login() {

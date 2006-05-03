@@ -1,3 +1,8 @@
+X.X.X - XXXX.XX.XX
+    * hiding of the cursor is now an option (disabled
+      by default) since some WMs does not re-initialize
+      the root window cursor.
+
 1.2.4 - 2006.01.18
     * Added commands for session start and stop
       (i.e. for session registering)

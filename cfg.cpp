@@ -42,6 +42,7 @@ Cfg::Cfg() {
     options.insert(option("shutdown_msg","The system is halting..."));
     options.insert(option("reboot_msg","The system is rebooting..."));
     options.insert(option("sessions","wmaker,blackbox,icewm"));
+    options.insert(option("hidecursor","false"));
 
     // Theme stuff
     options.insert(option("input_panel_x","50%"));
