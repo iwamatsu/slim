@@ -368,7 +368,10 @@ void App::Login() {
 #ifndef XNEST_DEBUG
     // Re-activate log file
     OpenLog();
+    RestartServer();
 #endif
+
+
 }
 
 
@@ -444,6 +447,11 @@ int CatchErrors(Display *dpy, XErrorEvent *ev) {
     return 0;
 }
 
+void App::RestartServer() {
+        StopServer(); 
+        RemoveLock();
+        Run();
+} 
 
 void App::KillAllClients(Bool top) {
     Window dummywindow;

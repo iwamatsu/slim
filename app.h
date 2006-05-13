@@ -23,8 +23,6 @@
 #include "panel.h"
 #include "cfg.h"
 
-using namespace std;
-
 class App {
 public:
     App(int argc, char** argv);
@@ -45,6 +43,7 @@ private:
     void Console();
     void Exit();
     void KillAllClients(Bool top);
+    void RestartServer();
     void ReadConfig();
     void OpenLog();
     void CloseLog();
