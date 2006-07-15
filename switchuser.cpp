@@ -26,9 +26,10 @@ SwitchUser::~SwitchUser() {
 }
 
 
-void SwitchUser::Login(const char* cmd) {
+void SwitchUser::Login(const char* cmd, const char* mcookie) {
     SetEnvironment();
     SetUserId();
+    SetClientAuth(mcookie);
     Execute(cmd);
 }
 
@@ -47,6 +48,8 @@ void SwitchUser::SetEnvironment() {
     putenv(StrConcat("PATH=", cfg->getOption("default_path").c_str()));
     putenv(StrConcat("DISPLAY=", displayName.c_str()));
     putenv(StrConcat("MAIL="_PATH_MAILDIR"/", Pw->pw_name));
+    putenv(StrConcat("XAUTHORITY=", StrConcat(Pw->pw_dir,"/.Xauthority")));
+    /* putenv("XAUTHORITY=/tmp/serverauth"); */
     chdir(Pw->pw_dir);
 }
 
@@ -99,3 +102,10 @@ char* SwitchUser::StrConcat(const char* str1, const char* str2) {
     return tmp;
 }
 
+void SwitchUser::SetClientAuth(const char* mcookie) {
+        int r;
+        string authfile = StrConcat(Pw->pw_dir,"/.Xauthority");
+        remove(authfile.c_str());
+        string cmd = cfg->getOption("xauth_path") + " -q -f " + authfile + " add :0 . " + mcookie;
+        r = system(cmd.c_str());
+}

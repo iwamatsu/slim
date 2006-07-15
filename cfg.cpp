@@ -26,6 +26,7 @@ Cfg::Cfg() {
     options.insert(option("xserver_arguments",""));
     options.insert(option("numlock",""));
     options.insert(option("daemon",""));
+    options.insert(option("xauth_path","/usr/X11R6/bin/xauth"));
     options.insert(option("login_cmd","exec /bin/bash -login ~/.xinitrc %session"));
     options.insert(option("halt_cmd","/sbin/shutdown -h now"));
     options.insert(option("reboot_cmd","/sbin/shutdown -r now"));
@@ -39,6 +40,7 @@ Cfg::Cfg() {
     options.insert(option("current_theme","default"));
     options.insert(option("lockfile","/var/run/slim.lock"));
     options.insert(option("logfile","/var/log/slim.log"));
+    options.insert(option("authfile","/var/run/slim.auth"));
     options.insert(option("shutdown_msg","The system is halting..."));
     options.insert(option("reboot_msg","The system is rebooting..."));
     options.insert(option("sessions","wmaker,blackbox,icewm"));

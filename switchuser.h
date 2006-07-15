@@ -27,7 +27,7 @@ class SwitchUser {
 public:
     SwitchUser(struct passwd *pw, Cfg *c, const std::string& display);
     ~SwitchUser();
-    void Login(const char* cmd);
+    void Login(const char* cmd, const char* mcookie);
 
 private:
     SwitchUser();
@@ -36,6 +36,7 @@ private:
     void Execute(const char* cmd);
     char* BaseName(const char* name);
     char* StrConcat(const char* str1, const char* str2);
+    void SetClientAuth(const char* mcookie);
     Cfg* cfg;
     struct passwd *Pw;
 

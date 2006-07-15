@@ -59,6 +59,7 @@ App::App(int argc, char** argv) {
     int tmp;
     ServerPID = -1;
     testing = false;
+    mcookie = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     // Parse command line
     while((tmp = getopt(argc, argv, "vhp:d?")) != EOF) {
@@ -181,6 +182,7 @@ void App::Run() {
             }
         }
 
+        CreateServerAuth();
         StartServer();
         alarm(2);
 #endif
@@ -328,7 +330,7 @@ void App::Login() {
             replaceVariables(sessStart, USER_VAR, pw->pw_name);
             system(sessStart.c_str());
         }
-        Su.Login(loginCommand.c_str());
+        Su.Login(loginCommand.c_str(), mcookie.c_str());
         exit(OK_EXIT);
     }
 
@@ -540,6 +542,8 @@ int App::StartServer() {
     static char* server[MAX_XSERVER_ARGS+2] = { NULL };
     server[0] = (char *)cfg.getOption("default_xserver").c_str();
     string argOption = cfg.getOption("xserver_arguments");
+    /* Add mandatory -xauth option */
+    argOption = argOption + " -auth " + cfg.getOption("authfile");
     char* args = new char[argOption.length()+2]; // NULL plus vt
     strcpy(args, argOption.c_str());
 
@@ -839,4 +843,41 @@ void App::replaceVariables(string& input,
     while ((pos = input.find(var, pos)) != string::npos) {
         input = input.substr(0, pos) + value + input.substr(pos+len);
     }
+}
+
+
+void App::CreateServerAuth() {
+	/* create mit cookie */
+	int i, r;
+	int hexcount = 0;
+        string authfile;
+	string cmd;
+	char *digits = "0123456789abcdef";
+        srand( time(NULL) );
+	for ( i = 0; i < 31; i++ ) {
+		r = rand()%16;
+                mcookie[i] = digits[r];
+                if (r>9)
+                        hexcount++;
+	}
+        /* MIT-COOKIE: even occurrences of digits and hex digits */
+        if ((hexcount%2) == 0) {
+                r = rand()%10;
+        } else {
+                r = rand()%5+10;
+        }
+        mcookie[31] = digits[r];
+	/* reinitialize auth file */
+	authfile = cfg.getOption("authfile");
+	remove(authfile.c_str());
+        putenv(StrConcat("XAUTHORITY=", authfile.c_str()));
+        cmd = cfg.getOption("xauth_path") + " -q -f " + authfile + " add :0 . " + mcookie;
+        system(cmd.c_str());
+}
+
+char* App::StrConcat(const char* str1, const char* str2) {
+    char* tmp = new char[strlen(str1) + strlen(str2) + 1];
+    strcpy(tmp, str1);
+    strcat(tmp, str2);
+    return tmp;
 }

@@ -30,7 +30,7 @@ public:
     void Run();
     int GetServerPID();
     void StopServer();
-
+	
     // Lock functions
     void GetLock();
     void RemoveLock();
@@ -48,7 +48,9 @@ private:
     void OpenLog();
     void CloseLog();
     void HideCursor();
-
+    void CreateServerAuth();
+    char* StrConcat(const char* str1, const char* str2);
+ 
     static std::string findValidRandomTheme(const std::string& set);
     static void replaceVariables(std::string& input,
                                  const std::string& var,
@@ -84,7 +86,7 @@ private:
     bool testing;
     
     std::string themeName;
-
+    std::string mcookie;
 };
 
 
