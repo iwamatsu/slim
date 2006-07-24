@@ -1,4 +1,4 @@
-1.2.5 - XXXX.XX.XX
+1.2.5 - 2006.07.24
     * hiding of the cursor is now an option (disabled
       by default) since some WMs does not re-initialize
       the root window cursor.
