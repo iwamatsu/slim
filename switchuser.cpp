@@ -103,9 +103,10 @@ char* SwitchUser::StrConcat(const char* str1, const char* str2) {
 }
 
 void SwitchUser::SetClientAuth(const char* mcookie) {
-        int r;
-        string authfile = StrConcat(Pw->pw_dir,"/.Xauthority");
-        remove(authfile.c_str());
-        string cmd = cfg->getOption("xauth_path") + " -q -f " + authfile + " add :0 . " + mcookie;
-        r = system(cmd.c_str());
+    int r;
+    string home = string(Pw->pw_dir);
+    string authfile = home + "/.Xauthority";
+    remove(authfile.c_str());
+    string cmd = cfg->getOption("xauth_path") + " -q -f " + authfile + " add :0 . " + mcookie;
+    r = system(cmd.c_str());
 }
