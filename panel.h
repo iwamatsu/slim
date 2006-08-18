@@ -13,7 +13,6 @@
 #define _PANEL_H_
 
 #include <X11/Xlib.h>
-#include <X11/xpm.h>
 #include <X11/cursorfont.h>
 #include <X11/Xmu/WinUtil.h>
 #include <sys/wait.h>

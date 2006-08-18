@@ -74,7 +74,6 @@ private:
 
     Cfg cfg;
 
-    XpmAttributes BackgroundPixmapAttributes;
     Pixmap BackgroundPixmap;
 
     void blankScreen();

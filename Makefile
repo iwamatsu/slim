@@ -6,7 +6,7 @@
 CXX=/usr/bin/g++
 CC=/usr/bin/gcc
 CFLAGS=-I. -I/usr/X11R6/include -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
-LDFLAGS=-L/usr/X11R6/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXpm -lXmu -lpng -ljpeg
+LDFLAGS=-L/usr/X11R6/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg
 CUSTOM=-DHAVE_SHADOW
 PREFIX=/usr
 CFGDIR=/etc
