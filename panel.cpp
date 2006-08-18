@@ -239,7 +239,7 @@ unsigned long Panel::GetColor(const char* colorname) {
 
 void Panel::Cursor(int visible) {
     char* text;
-    int xx, yy, x2,y2, cheight;
+    int xx, yy, y2, cheight;
     char* txth = "Wj"; // used to get cursor height
 
     switch(In->GetField()) {
@@ -254,6 +254,12 @@ void Panel::Cursor(int visible) {
             xx = input_name_x;
             yy = input_name_y;
             break;
+
+		default: /* Origin & NULL string as default values. */
+			text = (char *)NULL;
+			xx = (int)0;
+			yy = (int)0;
+			break;
     }
 
 
@@ -347,7 +353,7 @@ void Panel::OnKeyPress(XEvent* event) {
     del = In->Key(buffer, keysym, singleInputMode);
     Action = In->GetAction();
 
-    XGlyphInfo extents, delextents;
+    XGlyphInfo extents;
     XftDraw *draw = XftDrawCreate(Dpy, Win,
                                   DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
 
@@ -397,6 +403,12 @@ void Panel::OnKeyPress(XEvent* event) {
             xx = input_name_x;
             yy = input_name_y;
             break;
+
+		default: /* Origin & NULL string as default values. */
+			text = (char *)NULL;
+			xx = (int)0;
+			yy = (int)0;
+			break;
     }
 
     char* txth = "Wj"; // get proper maximum height ?
@@ -431,7 +443,6 @@ void Panel::OnKeyPress(XEvent* event) {
 // Draw welcome and "enter username" message
 void Panel::ShowText(){
     string cfgX, cfgY;
-    int n=-1;
     XGlyphInfo extents;
 
     bool singleInputMode =

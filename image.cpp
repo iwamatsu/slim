@@ -391,7 +391,7 @@ void Image::Crop(const int x, const int y, const int w, const int h) {
 void Image::Center(const int w, const int h, const char *hex) {
 
     unsigned long packed_rgb;
-    sscanf(hex, "%x", &packed_rgb);  
+    sscanf(hex, "%lx", &packed_rgb);  
 
     unsigned long r = packed_rgb>>16;
     unsigned long g = packed_rgb>>8 & 0xff;
@@ -471,7 +471,7 @@ void Image::Center(const int w, const int h, const char *hex) {
 void Image::Plain(const int w, const int h, const char *hex) {
 
     unsigned long packed_rgb;
-    sscanf(hex, "%x", &packed_rgb);  
+    sscanf(hex, "%lx", &packed_rgb);  
 
     unsigned long r = packed_rgb>>16;
     unsigned long g = packed_rgb>>8 & 0xff;

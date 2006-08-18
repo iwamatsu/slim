@@ -154,7 +154,7 @@ string Cfg::Trim( const string& s ) {
     }
     int pos = 0;
     string line = s;
-    string::size_type len = line.length();
+    int len = line.length();
     while ( pos < len && isspace( line[pos] ) ) {
         ++pos;
     }
@@ -240,7 +240,7 @@ string Cfg::nextSession(string current) {
     if (sessions.size() <= 1)
         return current;
 
-    for (int i=0; i<sessions.size()-1; i++) {
+    for (int i=0; i<(int)sessions.size()-1; i++) {
         if (current == sessions[i]) {
             return sessions[i+1];
         }

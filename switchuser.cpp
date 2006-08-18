@@ -14,8 +14,8 @@
 using namespace std;
 
 SwitchUser::SwitchUser(struct passwd *pw, Cfg *c, const string& display)
-    : Pw(pw),
-      cfg(c),
+    : cfg(c),
+      Pw(pw),
       displayName(display)
 {
 }
