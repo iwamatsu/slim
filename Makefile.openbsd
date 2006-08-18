@@ -6,7 +6,6 @@
 CXX=/usr/bin/g++
 CC=/usr/bin/gcc
 CFLAGS=-I. -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/freetype2/config -I/usr/local/include/libpng -I/usr/local/include -I/usr/include
-CXXLAGS=$(CFLAGS)
 LDFLAGS=-L/usr/X11R6/lib -L/usr/local/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lXpm -lXmu -lpng -ljpeg
 CUSTOM=-DNEEDS_BASENAME
 PREFIX=/usr
