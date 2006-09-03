@@ -180,6 +180,7 @@ void App::Run() {
                 cerr << APPNAME << ": " << strerror(errno) << endl;
                 exit(ERR_EXIT);
             }
+            UpdatePid();
         }
 
         CreateServerAuth();
@@ -880,4 +881,14 @@ char* App::StrConcat(const char* str1, const char* str2) {
     strcpy(tmp, str1);
     strcat(tmp, str2);
     return tmp;
+}
+
+void App::UpdatePid() {
+    std::ofstream lockfile(cfg.getOption("lockfile").c_str(), ios_base::out);
+    if (!lockfile) {
+	    cerr << APPNAME << ": Could not update lock file: " << cfg.getOption("lockfile").c_str() << std::endl;
+	    exit(ERR_EXIT);
+    }
+    lockfile << getpid() << std::endl;
+    lockfile.close();
 }
