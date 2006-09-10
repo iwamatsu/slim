@@ -22,6 +22,7 @@
 #include <iostream>
 #include "panel.h"
 #include "cfg.h"
+#include "image.h"
 
 class App {
 public:
@@ -73,11 +74,12 @@ private:
     // Options
     char* DispName;
 
-    Cfg cfg;
+    Cfg *cfg;
 
     Pixmap BackgroundPixmap;
 
     void blankScreen();
+    Image* image;
     void setBackground(const string& themedir);
 	
     bool daemonmode;

@@ -104,6 +104,9 @@ Cfg::Cfg() {
 
 }
 
+Cfg::~Cfg() {
+	options.clear();
+}
 /*
  * Creates the Cfg object and parses
  * known options from the given configfile / themefile

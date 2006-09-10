@@ -28,6 +28,7 @@ class Cfg {
 
 public:
     Cfg();
+    ~Cfg();
     bool readConf(string configfile);
     string parseOption(string line, string option);
     const string& getError() const;

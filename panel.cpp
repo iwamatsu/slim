@@ -122,6 +122,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
 
     // Merge image into background
     image->Merge(bg, X, Y);
+    delete bg;
     PanelPixmap = image->createPixmap(Dpy, Scr, Root);
 
     // Read (and substitute vars in) the welcome message
@@ -138,6 +139,11 @@ Panel::~Panel() {
     XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &welcomecolor);
     XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &entercolor);
     XFreeGC(Dpy, TextGC);
+    XftFontClose(Dpy, font);
+    XftFontClose(Dpy, msgfont);
+    XftFontClose(Dpy, introfont);
+    XftFontClose(Dpy, welcomefont);
+    XftFontClose(Dpy, enterfont);
     delete In;
     delete image;
 
