@@ -438,10 +438,12 @@ void App::Exit() {
         LoginPanel->Message(testmsg);
         sleep(3);
     } else {
-        delete LoginPanel;
         StopServer();
         RemoveLock();
     }
+    XCloseDisplay(Dpy);
+    delete LoginPanel;
+    delete cfg;
     exit(OK_EXIT);
 }
 
