@@ -15,7 +15,7 @@ DESTDIR=
 #######################################################
 
 NAME=slim
-VERSION=1.2.5
+VERSION=1.2.6
 
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"

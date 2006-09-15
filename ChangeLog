@@ -1,3 +1,9 @@
+1.2.6 - 2006.09.15
+    * Bug #008167: Update pid when in daemon mode
+    * Fixed warnings when compiling with -Wall. Thanks to
+      KIMURA Masaru
+    * Fixed major memory leaks with repeated login (bug #007535)
+
 1.2.5 - 2006.07.24
     * hiding of the cursor is now an option (disabled
       by default) since some WMs does not re-initialize
