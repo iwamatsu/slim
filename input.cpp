@@ -104,7 +104,7 @@ struct passwd* Input::GetPasswdStruct() {
     endpwent();
     if (pw->pw_shell[0] == '\0') {
         setusershell();
-        pw->pw_shell = getusershell();
+        strcpy(pw->pw_shell, getusershell());
         endusershell();
     }
     return pw;
