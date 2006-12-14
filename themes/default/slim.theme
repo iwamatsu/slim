@@ -20,7 +20,7 @@ input_panel_y           65%
 input_name_x            394
 input_name_y            181
 input_font          	Verdana:size=12:dpi=75
-input_fgcolor           #000000
+input_color             #000000
 
 # Username / password request
 username_font          	Verdana:size=14:bold:dpi=75
