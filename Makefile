@@ -21,11 +21,15 @@ DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
 OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o input.o app.o panel.o
+BGOBJECTS=jpeg.o png.o image.o ssetbg.o
 
-all: slim
+all: slim ssetbg
 
 slim: $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
+
+ssetbg: $(BGOBJECTS)
+	$(CXX) $(LDFLAGS) $(BGOBJECTS) -o ssetbg
 
 .cpp.o:
 	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
@@ -33,20 +37,22 @@ slim: $(OBJECTS)
 .c.o:
 	$(CC) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
 
-install: slim install-theme
+install: slim ssetbg install-theme
 	install -D -m 755 slim $(DESTDIR)$(PREFIX)/bin/slim
+	install -D -m 755 ssetbg $(DESTDIR)$(PREFIX)/bin/ssetbg
 	install -D -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1/slim.1
+	install -D -m 644 ssetbg.1 $(DESTDIR)$(MANDIR)/man1/ssetbg.1
 	test -e $(DESTDIR)$(CFGDIR)/slim.conf || \
 		install -D -m 644 slim.conf $(DESTDIR)$(CFGDIR)/slim.conf
 
 clean:
-	@rm -f slim *.o
+	@rm -f slim ssetbg *.o
 
 dist:
 	@rm -rf $(NAME)-$(VERSION)
 	@mkdir $(NAME)-$(VERSION)
 	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog INSTALL README TODO \
-		xinitrc.sample slim.1 THEMES themes slim.conf $(NAME)-$(VERSION)
+		xinitrc.sample slim.1 ssetbg.1 THEMES themes slim.conf $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)/themes/.svn	$(NAME)-$(VERSION)/themes/default/.svn
 	@tar cvzf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)
