@@ -347,6 +347,7 @@ void App::Login() {
     }
     if (WIFEXITED(status) && WEXITSTATUS(status)) {
         LoginPanel->Message("Failed to execute login command");
+        sleep(3);
     } else {
          string sessStop = cfg->getOption("sessionstop_cmd");
          if (sessStop != "") {
@@ -437,12 +438,13 @@ void App::Exit() {
         char* testmsg = "This is a test message :-)";
         LoginPanel->Message(testmsg);
         sleep(3);
+        delete LoginPanel;
+        XCloseDisplay(Dpy);
     } else {
+        delete LoginPanel;
         StopServer();
         RemoveLock();
     }
-    XCloseDisplay(Dpy);
-    delete LoginPanel;
     delete cfg;
     exit(OK_EXIT);
 }
