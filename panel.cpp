@@ -541,9 +541,9 @@ void Panel::ShowSession() {
     int msg_x = Cfg::absolutepos("50%", XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), extents.width);
     int msg_y = XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)) - extents.height -100;
     int shadowXOffset =
-        Cfg::string2int(cfg->getOption("welcome_shadow_xoffset").c_str());
+        Cfg::string2int(cfg->getOption("msg_shadow_xoffset").c_str());
     int shadowYOffset =
-        Cfg::string2int(cfg->getOption("welcome_shadow_yoffset").c_str());
+        Cfg::string2int(cfg->getOption("msg_shadow_yoffset").c_str());
 
     SlimDrawString8(draw, &msgcolor, msgfont, msg_x, msg_y,
                     (XftChar8*)text, strlen(text),
