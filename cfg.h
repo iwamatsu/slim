@@ -37,13 +37,16 @@ public:
 
     static int absolutepos(const string& position, int max, int width);
     static int string2int(const char* string, bool* ok = 0);
-    static void split(vector<string>& v, const string& str, char c);
+    static void split(vector<string>& v, const string& str, 
+		      char c, bool useEmpty=true);
     static string Trim(const string& s);
 
     string nextSession(string current);
 
 private:
     map<string,string> options;
+    vector<string> sessions;
+    int currentSession;
     string error;
 
 };

@@ -19,7 +19,9 @@ using namespace std;
 
 typedef pair<string,string> option;
 
-Cfg::Cfg() {
+Cfg::Cfg() 
+    : currentSession(-1)
+{
     // Configuration options
     options.insert(option("default_path","./:/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin"));
     options.insert(option("default_xserver","/usr/X11R6/bin/X"));
@@ -129,6 +131,7 @@ bool Cfg::readConf(string configfile) {
             }
         }
         cfgfile.close();
+        split(sessions, getOption("sessions"), ',', false);
         return true;
     } else {
         error = "Cannot read configuration file: " + configfile;
@@ -220,33 +223,31 @@ int Cfg::absolutepos(const string& position, int max, int width) {
 }
 
 // split a comma separated string into a vector of strings
-void Cfg::split(vector<string>& v, const string& str, char c) {
+void Cfg::split(vector<string>& v, const string& str, char c, bool useEmpty) {
     v.clear();
     string::const_iterator s = str.begin();
+    string tmp;
     while (true) {
         string::const_iterator begin = s;
         while (*s != c && s != str.end()) { ++s; }
-        v.push_back(string(begin, s));
+	tmp = string(begin, s);
+	if (useEmpty || tmp.size() > 0)
+            v.push_back(tmp);
         if (s == str.end()) {
             break;
         }
         if (++s == str.end()) {
-            v.push_back("");
+	    if (useEmpty)
+                v.push_back("");
             break;
         }
     }
 }
 
 string Cfg::nextSession(string current) {
-    vector<string> sessions;
-    split(sessions, getOption("sessions"), ',');
-    if (sessions.size() <= 1)
+    if (sessions.size() < 1)
         return current;
 
-    for (int i=0; i<(int)sessions.size()-1; i++) {
-        if (current == sessions[i]) {
-            return sessions[i+1];
-        }
-    }
-    return sessions[0];
+    currentSession = (currentSession + 1) % sessions.size();
+    return sessions[currentSession];
 }

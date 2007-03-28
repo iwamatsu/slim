@@ -524,8 +524,9 @@ string Panel::getSession() {
 // choose next available session type
 void Panel::SwitchSession() {
     session = cfg->nextSession(session);
-    //TODO: get sessions from cfg and cycle to the next one
-    ShowSession();
+    if (session.size() > 0) {
+        ShowSession();
+    }
 }
 
 // Display session type on the screen
