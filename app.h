@@ -24,6 +24,10 @@
 #include "cfg.h"
 #include "image.h"
 
+#ifdef USE_PAM
+#include "PAM.h"
+#endif
+
 class App {
 public:
     App(int argc, char** argv);
@@ -31,7 +35,7 @@ public:
     void Run();
     int GetServerPID();
     void StopServer();
-	
+
     // Lock functions
     void GetLock();
     void RemoveLock();
@@ -52,6 +56,8 @@ private:
     void CreateServerAuth();
     char* StrConcat(const char* str1, const char* str2);
     void UpdatePid();
+
+    bool AuthenticateUser(void);
  
     static std::string findValidRandomTheme(const std::string& set);
     static void replaceVariables(std::string& input,
@@ -70,6 +76,10 @@ private:
     Panel* LoginPanel;
     int ServerPID;
     char* DisplayName;
+
+#ifdef USE_PAM
+	PAM::Authenticator pam;
+#endif
 
     // Options
     char* DispName;

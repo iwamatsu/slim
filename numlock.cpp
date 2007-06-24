@@ -24,19 +24,19 @@ int NumLock::xkb_init(Display* dpy) {
     int xkb_lmin = XkbMinorVersion;
     return XkbLibraryVersion( &xkb_lmaj, &xkb_lmin )
         && XkbQueryExtension( dpy, &xkb_opcode, &xkb_event, &xkb_error,
-			       &xkb_lmaj, &xkb_lmin );
+                   &xkb_lmaj, &xkb_lmin );
 }
     
 unsigned int NumLock::xkb_mask_modifier( XkbDescPtr xkb, const char *name ) {
     int i;
     if( !xkb || !xkb->names )
-	return 0;
+    return 0;
     for( i = 0; i < XkbNumVirtualMods; i++ ) {
-	    char* modStr = XGetAtomName( xkb->dpy, xkb->names->vmods[i] );
-	    if( modStr != NULL && strcmp(name, modStr) == 0 ) {
-	        unsigned int mask;
-	        XkbVirtualModsToReal( xkb, 1 << i, &mask );
-	        return mask;
+        char* modStr = XGetAtomName( xkb->dpy, xkb->names->vmods[i] );
+        if( modStr != NULL && strcmp(name, modStr) == 0 ) {
+            unsigned int mask;
+            XkbVirtualModsToReal( xkb, 1 << i, &mask );
+            return mask;
         }
     }
     return 0;

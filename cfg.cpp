@@ -13,6 +13,10 @@
 #include <iostream>
 #include <unistd.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
 #include "cfg.h"
 
 using namespace std;
@@ -36,7 +40,7 @@ Cfg::Cfg()
     options.insert(option("sessionstart_cmd",""));
     options.insert(option("sessionstop_cmd",""));
     options.insert(option("console_cmd","/usr/X11R6/bin/xterm -C -fg white -bg black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""));
-    options.insert(option("screenshot_cmd","import -window root /login.app.png"));
+    options.insert(option("screenshot_cmd","import -window root /slim.png"));
     options.insert(option("welcome_msg","Welcome to %host"));
     options.insert(option("default_user",""));
     options.insert(option("current_theme","default"));
@@ -46,6 +50,7 @@ Cfg::Cfg()
     options.insert(option("shutdown_msg","The system is halting..."));
     options.insert(option("reboot_msg","The system is rebooting..."));
     options.insert(option("sessions","wmaker,blackbox,icewm"));
+    options.insert(option("sessiondir",""));
     options.insert(option("hidecursor","false"));
 
     // Theme stuff
@@ -107,7 +112,7 @@ Cfg::Cfg()
 }
 
 Cfg::~Cfg() {
-	options.clear();
+    options.clear();
 }
 /*
  * Creates the Cfg object and parses
@@ -131,7 +136,9 @@ bool Cfg::readConf(string configfile) {
             }
         }
         cfgfile.close();
-        split(sessions, getOption("sessions"), ',', false);
+
+        fillSessionList();
+
         return true;
     } else {
         error = "Cannot read configuration file: " + configfile;
@@ -229,17 +236,52 @@ void Cfg::split(vector<string>& v, const string& str, char c, bool useEmpty) {
     while (true) {
         string::const_iterator begin = s;
         while (*s != c && s != str.end()) { ++s; }
-	tmp = string(begin, s);
-	if (useEmpty || tmp.size() > 0)
+    tmp = string(begin, s);
+    if (useEmpty || tmp.size() > 0)
             v.push_back(tmp);
         if (s == str.end()) {
             break;
         }
         if (++s == str.end()) {
-	    if (useEmpty)
+        if (useEmpty)
                 v.push_back("");
             break;
         }
+    }
+}
+
+void Cfg::fillSessionList(){
+    string strSessionList = getOption("sessions");
+    string strSessionDir  = getOption("sessiondir");
+
+    sessions.clear();
+
+    if( !strSessionDir.empty() ) {
+        DIR *pDir = opendir(strSessionDir.c_str());
+
+        if (pDir != NULL) {
+            struct dirent *pDirent = NULL;
+
+            while ((pDirent = readdir(pDir)) != NULL) {
+                string strFile(strSessionDir);
+                strFile += "/";
+                strFile += pDirent->d_name;
+
+                struct stat oFileStat;
+
+                if (stat(strFile.c_str( ), &oFileStat) == 0){
+                    if (S_ISREG(oFileStat.st_mode) && 
+                        access(strFile.c_str(), R_OK | X_OK) == 0){
+                        sessions.push_back(string(pDirent->d_name));
+                    }
+                }
+            }
+            closedir(pDir);
+        }
+    } 
+
+    if (sessions.empty()){
+        split(sessions, strSessionList, ',', false);
     }
 }
 

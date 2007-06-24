@@ -13,51 +13,73 @@
 #define _PANEL_H_
 
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <X11/Xft/Xft.h>
 #include <X11/cursorfont.h>
 #include <X11/Xmu/WinUtil.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <iostream>
+#include <string>
 
 #ifdef NEEDS_BASENAME
 #include <libgen.h>
 #endif
 
 #include "switchuser.h"
-#include "input.h"
 #include "const.h"
 #include "image.h"
 
 
 class Panel {
 public:
+    enum ActionType {
+        Login,
+        Console,
+        Reboot,
+        Halt,
+        Exit,
+        Suspend
+    };
+    enum FieldType {
+        Get_Name,
+        Get_Passwd
+    };
+
+
     Panel(Display* dpy, int scr, Window root, Cfg* config,
           const string& themed);
     ~Panel();
     void OpenPanel();
     void ClosePanel();
     void ClearPanel();
-    void Message(const char* text);
-    void Error(const char* text);
-    Input* GetInput();
-    int EventHandler(XEvent* event);
+    void Message(const string& text);
+    void Error(const string& text);
+    void EventHandler(const FieldType& curfield);
     string getSession();
+    ActionType getAction(void) const;
 
+    void Reset(void);
+    void ResetName(void);
+    void ResetPasswd(void);
+    void SetName(const string& name);
+    const string& GetName(void) const;
+    const string& GetPasswd(void) const;
 private:
     Panel();
     void Cursor(int visible);
     unsigned long GetColor(const char* colorname);
-    void OnExpose(XEvent* event);
-    void OnKeyPress(XEvent* event);
+    void OnExpose(void);
+    bool OnKeyPress(XEvent& event);
     void ShowText();
     void SwitchSession();
     void ShowSession();
 
-    void SlimDrawString8(XftDraw* d, XftColor* color, XftFont* font,
-                         int x, int y, XftChar8 *string, int len,
-                         XftColor* shadowColor,
-                         int xOffset, int yOffset);
+    void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
+                            int x, int y, const string& str,
+                            XftColor* shadowColor,
+                            int xOffset, int yOffset);
 
     Cfg* cfg;
 
@@ -82,7 +104,13 @@ private:
     XftFont* enterfont;
     XftColor entercolor;
     XftColor entershadowcolor;
-    int Action;
+    ActionType action;
+    FieldType field;
+    
+    // Username/Password
+    string NameBuffer;
+    string PasswdBuffer;
+    string HiddenPasswdBuffer;
 
     // Configuration
     int input_name_x;
@@ -109,9 +137,6 @@ private:
 
     // Pixmap data
     Pixmap PanelPixmap;
-
-    // Name/Passwd handler
-    Input* In;
 
     Image* image;
 

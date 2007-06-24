@@ -8,6 +8,10 @@ CC=/usr/bin/gcc
 CFLAGS=-I. -I/usr/X11R6/include -I/usr/X11R6/include/freetype2 -I/usr/X11R6/include/freetype2/config -I/usr/pkg/include -I/usr/include
 LDFLAGS=-L/usr/X11R6/lib -L/usr/pkg/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lcrypt -lXmu -lpng -ljpeg
 CUSTOM=-DNEEDS_BASENAME
+.ifdef(USE_PAM)
+  LDFLAGS+= -lpam
+  CUSTOM+= -DUSE_PAM
+.endif
 PREFIX=/usr
 CFGDIR=/etc
 MANDIR=/usr/share/man
@@ -20,16 +24,15 @@ VERSION=1.2.6
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
-OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o input.o app.o panel.o
-BGOBJECTS=jpeg.o png.o image.o ssetbg.o
+OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o panel.o
+.ifdef USE_PAM
+  OBJECTS+=PAM.o 
+.endif
 
-all: slim ssetbg
+all: slim
 
 slim: $(OBJECTS) 
 	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
-
-ssetbg: $(BGOBJECTS)
-	$(CXX) $(LDFLAGS) $(BGOBJECTS) -o ssetbg
 
 .cpp.o:
 	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
@@ -37,25 +40,23 @@ ssetbg: $(BGOBJECTS)
 .c.o:
 	$(CC) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
 
-install: slim ssetbg install-theme
+install: slim install-theme
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -d $(DESTDIR)$(MANDIR)/man1
 	install -d $(DESTDIR)$(CFGDIR)
 	install -m 755 slim $(DESTDIR)$(PREFIX)/bin
-	install -m 755 ssetbg $(DESTDIR)$(PREFIX)/bin
 	install -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1
-	install -m 644 ssetbg.1 $(DESTDIR)$(MANDIR)/man1
 	test -e $(DESTDIR)$(CFGDIR)/slim.conf || \
 		install -m 644 slim.conf $(DESTDIR)$(CFGDIR)
 
 clean:
-	@rm -f slim ssetbg *.o
+	@rm -f slim *.o
 
 dist:
 	@rm -rf $(NAME)-$(VERSION)
 	@mkdir $(NAME)-$(VERSION)
 	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog README INSTALL TODO \
-		xinitrc.sample slim.1 ssetbg.1 THEMES themes slim.conf $(NAME)-$(VERSION)
+		xinitrc.sample slim.1 THEMES themes slim.conf $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)/themes/.svn	$(NAME)-$(VERSION)/themes/default/.svn
 	@tar cvzf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)

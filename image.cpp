@@ -369,7 +369,7 @@ void Image::Crop(const int x, const int y, const int w, const int h) {
                     new_rgb[3*ipos + k] = static_cast<unsigned char> (rgb_data[3*opos + k]);
                 }
                 if (png_alpha != NULL)
-					new_alpha[ipos] = static_cast<unsigned char> (png_alpha[opos]);
+                    new_alpha[ipos] = static_cast<unsigned char> (png_alpha[opos]);
                 ipos++;
             }
             opos++;
@@ -380,7 +380,7 @@ void Image::Crop(const int x, const int y, const int w, const int h) {
     free(png_alpha);
     rgb_data = new_rgb;
     if (png_alpha != NULL)
-	    png_alpha = new_alpha;
+        png_alpha = new_alpha;
     width = w;
     height = h;
     area = w * h;
@@ -407,11 +407,11 @@ void Image::Center(const int w, const int h, const char *hex) {
     int y = (h - height) / 2;
     
     if (x<0) {
-    	Crop((width - w)/2,0,w,height);
+        Crop((width - w)/2,0,w,height);
         x = 0;
     }
     if (y<0) {
-    	Crop(0,(height - h)/2,width,h);
+        Crop(0,(height - h)/2,width,h);
         y = 0;
     }
     int x2 = x + width;
@@ -428,13 +428,13 @@ void Image::Center(const int w, const int h, const char *hex) {
         new_rgb[3*i+2] = b;
     }
 
-	if (png_alpha != NULL) {
+    if (png_alpha != NULL) {
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
                 if (j>=y && i>=x && j<y2 && i<x2) {
-            	    ipos = j*w + i;
+                    ipos = j*w + i;
                     for (int k = 0; k < 3; k++) {
-	                    tmp = rgb_data[3*opos + k]*png_alpha[opos]/255.0
+                        tmp = rgb_data[3*opos + k]*png_alpha[opos]/255.0
                               + new_rgb[k]*(1-png_alpha[opos]/255.0);
                         new_rgb[3*ipos + k] = static_cast<unsigned char> (tmp);
                     }
@@ -447,9 +447,9 @@ void Image::Center(const int w, const int h, const char *hex) {
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
                 if (j>=y && i>=x && j<y2 && i<x2) {
-            	    ipos = j*w + i;
+                    ipos = j*w + i;
                     for (int k = 0; k < 3; k++) {
-	                    tmp = rgb_data[3*opos + k];
+                        tmp = rgb_data[3*opos + k];
                         new_rgb[3*ipos + k] = static_cast<unsigned char> (tmp);
                     }
                     opos++;

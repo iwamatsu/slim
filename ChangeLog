@@ -1,10 +1,10 @@
-1.2.7 - XXXX.XX.XX
+1.3.0 - XXXX.XX.XX
+    * Added PAM support by Martin Parm
     * Fixed segfault on exit when testing themes. Thanks
       to Darren Salt & Mike Massonnet
     * Fixed vt argument detection, thanks to Henrik Brix Andersen
     * Corrected reference to input_color in the default theme
     * Fixed default shell setting
-    * Added ssetbg, a simple tool for setting the backround image.
 
 1.2.6 - 2006.09.15
     * Bug #008167: Update pid when in daemon mode

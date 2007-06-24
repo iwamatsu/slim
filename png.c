@@ -25,7 +25,7 @@
 
 int
 read_png(const char *filename, int *width, int *height, unsigned char **rgb, 
-	 unsigned char **alpha)
+     unsigned char **alpha)
 {
     FILE *infile = fopen(filename, "rb");
 
@@ -74,14 +74,14 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
     *height = (int) h;
     
     if (color_type == PNG_COLOR_TYPE_RGB_ALPHA
-	|| color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
     {
-	alpha[0] = malloc(*width * *height);
-	if (alpha[0] == NULL)
-	{
-	    fprintf(stderr, "Can't allocate memory for alpha channel in PNG file.\n");
-	    return(0); 
-	}
+    alpha[0] = malloc(*width * *height);
+    if (alpha[0] == NULL)
+    {
+        fprintf(stderr, "Can't allocate memory for alpha channel in PNG file.\n");
+        return(0); 
+    }
     }
 
     /* Change a paletted/grayscale image to RGB */
@@ -127,28 +127,28 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 
     if (alpha[0] == NULL)
     {
-	ptr = rgb[0];
-	for (i = 0; i < *height; i++)
-	{
-	    memcpy(ptr, row_pointers[i], 3 * *width);
-	    ptr += 3 * *width;
-	}
+    ptr = rgb[0];
+    for (i = 0; i < *height; i++)
+    {
+        memcpy(ptr, row_pointers[i], 3 * *width);
+        ptr += 3 * *width;
+    }
     }
     else
     {
-	int j;
-	ptr = rgb[0];
-	for (i = 0; i < *height; i++)
-	{
-	    int ipos = 0;
-	    for (j = 0; j < *width; j++)
-	    {
-		*ptr++ = row_pointers[i][ipos++];
-		*ptr++ = row_pointers[i][ipos++];
-		*ptr++ = row_pointers[i][ipos++];
-		alpha[0][i * *width + j] = row_pointers[i][ipos++];
-	    }
-	}
+    int j;
+    ptr = rgb[0];
+    for (i = 0; i < *height; i++)
+    {
+        int ipos = 0;
+        for (j = 0; j < *width; j++)
+        {
+        *ptr++ = row_pointers[i][ipos++];
+        *ptr++ = row_pointers[i][ipos++];
+        *ptr++ = row_pointers[i][ipos++];
+        alpha[0][i * *width + j] = row_pointers[i][ipos++];
+        }
+    }
     }
 
     png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);

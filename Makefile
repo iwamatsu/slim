@@ -5,9 +5,14 @@
 #######################################################
 CXX=/usr/bin/g++
 CC=/usr/bin/gcc
-CFLAGS=-I. -I/usr/X11R6/include -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
+CFLAGS=-Wall -I. -I/usr/X11R6/include -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
+CPPFLAGS=-Wold-style-cast $(CFLAGS)
 LDFLAGS=-L/usr/X11R6/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg
 CUSTOM=-DHAVE_SHADOW
+ifdef USE_PAM
+LDFLAGS+= -lpam
+CUSTOM+= -DUSE_PAM
+endif
 PREFIX=/usr
 CFGDIR=/etc
 MANDIR=/usr/man
@@ -20,39 +25,36 @@ VERSION=1.2.6
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
-OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o input.o app.o panel.o
-BGOBJECTS=jpeg.o png.o image.o ssetbg.o
+OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o panel.o
+ifdef USE_PAM
+OBJECTS+=PAM.o
+endif
 
-all: slim ssetbg
+all: slim
 
 slim: $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
 
-ssetbg: $(BGOBJECTS)
-	$(CXX) $(LDFLAGS) $(BGOBJECTS) -o ssetbg
-
 .cpp.o:
-	$(CXX) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
 
 .c.o:
 	$(CC) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
 
-install: slim ssetbg install-theme
+install: slim install-theme
 	install -D -m 755 slim $(DESTDIR)$(PREFIX)/bin/slim
-	install -D -m 755 ssetbg $(DESTDIR)$(PREFIX)/bin/ssetbg
 	install -D -m 644 slim.1 $(DESTDIR)$(MANDIR)/man1/slim.1
-	install -D -m 644 ssetbg.1 $(DESTDIR)$(MANDIR)/man1/ssetbg.1
 	test -e $(DESTDIR)$(CFGDIR)/slim.conf || \
 		install -D -m 644 slim.conf $(DESTDIR)$(CFGDIR)/slim.conf
 
 clean:
-	@rm -f slim ssetbg *.o
+	@rm -f slim *.o
 
 dist:
 	@rm -rf $(NAME)-$(VERSION)
 	@mkdir $(NAME)-$(VERSION)
 	@cp -r *.cpp *.h *.c Makefile Makefile.* COPYING ChangeLog INSTALL README TODO \
-		xinitrc.sample slim.1 ssetbg.1 THEMES themes slim.conf $(NAME)-$(VERSION)
+		xinitrc.sample slim.1 THEMES themes slim.conf $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)/themes/.svn	$(NAME)-$(VERSION)/themes/default/.svn
 	@tar cvzf $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION)
 	@rm -rf $(NAME)-$(VERSION)

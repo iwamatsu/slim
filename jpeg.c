@@ -46,7 +46,7 @@ read_jpeg(const char *filename, int *width, int *height, unsigned char **rgb)
     if (rgb[0] == NULL)
     {
         fprintf(stderr, "Can't allocate memory for JPEG file.\n");
-	fclose(infile);
+    fclose(infile);
         return(0);
     }
 
@@ -65,7 +65,7 @@ read_jpeg(const char *filename, int *width, int *height, unsigned char **rgb)
         if (ptr == NULL)
         {
             fprintf(stderr, "Can't allocate memory for JPEG file.\n");
-	    fclose(infile);
+        fclose(infile);
             return(0);
         }
 
