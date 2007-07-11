@@ -135,6 +135,7 @@ App::App(int argc, char** argv){
     ServerPID = -1;
     testing = false;
     mcookie = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    Dpy = NULL;
 
     // Parse command line
     while((tmp = getopt(argc, argv, "vhp:d?")) != EOF) {
@@ -930,7 +931,7 @@ void App::StopServer() {
 
     // Catch X error
     XSetIOErrorHandler(IgnoreXIO);
-    if(!setjmp(CloseEnv))
+    if(!setjmp(CloseEnv) && Dpy)
         XCloseDisplay(Dpy);
 
     // Send HUP to process group
