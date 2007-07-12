@@ -6,7 +6,7 @@
 CXX=/usr/bin/g++
 CC=/usr/bin/gcc
 CFLAGS=-Wall -I. -I/usr/X11R6/include -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
-CPPFLAGS=-Wold-style-cast $(CFLAGS)
+CXXFLAGS=$(CFLAGS)
 LDFLAGS=-L/usr/X11R6/lib -lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg
 CUSTOM=-DHAVE_SHADOW
 ifdef USE_PAM
@@ -36,7 +36,7 @@ slim: $(OBJECTS)
 	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
 
 .cpp.o:
-	$(CXX) $(CPPFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
 
 .c.o:
 	$(CC) $(CFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
