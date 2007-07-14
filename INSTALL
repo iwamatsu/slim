@@ -6,8 +6,10 @@ INSTALL file for SLiM
  - libjpeg
 
 1. to build and install the program:
- - edit the Makefile to adjust libraries and paths to your OS.
+ - edit the Makefile to adjust libraries and paths to your OS (if needed)
  - make
+     or
+ - make ENABLE_PAM=1 to enable PAM support 
  - make install
  
 Pre-configured makefiles for some platform are available,
@@ -17,7 +19,3 @@ i.e. for FreeBSD use:
 
 2. automatic startup
 Edit the init scripts according to your OS/Distribution.
-
-
-
-
