@@ -9,7 +9,7 @@ INSTALL file for SLiM
  - edit the Makefile to adjust libraries and paths to your OS (if needed)
  - make
      or
- - make ENABLE_PAM=1 to enable PAM support 
+ - make USE_PAM=1 to enable PAM support 
  - make install
  
 Pre-configured makefiles for some platform are available,
