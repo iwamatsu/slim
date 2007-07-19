@@ -6,9 +6,9 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
 */
-#include <PAM.h>
 #include <string>
 #include <iostream>
+#include "PAM.h"
 
 namespace PAM {
     Exception::Exception(pam_handle_t* _pam_handle,
