@@ -135,6 +135,7 @@ App::App(int argc, char** argv){
     ServerPID = -1;
     testing = false;
     mcookie = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    daemonmode = false;
     Dpy = NULL;
 
     // Parse command line
