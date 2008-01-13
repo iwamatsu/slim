@@ -2,6 +2,7 @@ INSTALL file for SLiM
 
 0. Prerequisites:
  - X.org or XFree86
+ - libxmu
  - libpng
  - libjpeg
 
