@@ -242,7 +242,7 @@ unsigned long Panel::GetColor(const char* colorname) {
 void Panel::Cursor(int visible) {
     const char* text;
     int xx, yy, y2, cheight;
-    char* txth = "Wj"; // used to get cursor height
+    const char* txth = "Wj"; // used to get cursor height
 
     switch(field) {
         case Get_Passwd:
@@ -431,7 +431,7 @@ bool Panel::OnKeyPress(XEvent& event) {
                         break;
                     case GET_PASSWD:
                         formerString=HiddenPasswdBuffer;
-                        if (PasswdBuffer.length() < INPUT_MAXLENGTH_NAME-1){
+                        if (PasswdBuffer.length() < INPUT_MAXLENGTH_PASSWD-1){
                             PasswdBuffer.append(&ascii,1);
                             HiddenPasswdBuffer.append("*");
                         };
@@ -460,7 +460,7 @@ bool Panel::OnKeyPress(XEvent& event) {
     }
 
     if (!formerString.empty()){
-        char* txth = "Wj"; // get proper maximum height ?
+        const char* txth = "Wj"; // get proper maximum height ?
         XftTextExtents8(Dpy, font, reinterpret_cast<const XftChar8*>(txth), strlen(txth), &extents);
         int maxHeight = extents.height;
 
