@@ -297,7 +297,7 @@ void App::Run() {
     // for tests we use a standard window
     if (testing) {
         Window RealRoot = RootWindow(Dpy, Scr);
-        Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 640, 480, 0, 0, 0);
+        Root = XCreateSimpleWindow(Dpy, RealRoot, 0, 0, 1280, 1024, 0, 0, 0);
         XMapWindow(Dpy, Root);
         XFlush(Dpy);
     } else {
@@ -313,6 +313,7 @@ void App::Run() {
     int panelclosed = 1;
     Panel::ActionType Action;
     bool firstloop = true; // 1st time panel is shown (for automatic username)
+    bool focuspass = cfg->getOption("focus_password")=="yes";
 
     while(1) {
         if(panelclosed) {
@@ -330,19 +331,22 @@ void App::Run() {
         }
 
         LoginPanel->Reset();
+	
+	
         if (firstloop && cfg->getOption("default_user") != "") {
             LoginPanel->SetName(cfg->getOption("default_user") );
-            firstloop = false;
         }
 
 
-        if (!AuthenticateUser()){
+        if (!AuthenticateUser(focuspass && firstloop)){
             panelclosed = 0;
+            firstloop = false;
             LoginPanel->ClearPanel();
             XBell(Dpy, 100);
             continue;
         }
-        
+	
+	firstloop = false;
 
         Action = LoginPanel->getAction();
         // for themes test we just quit
@@ -376,7 +380,7 @@ void App::Run() {
 }
 
 #ifdef USE_PAM
-bool App::AuthenticateUser(void){
+bool App::AuthenticateUser(bool focuspass){
     // Reset the username
     try{
         pam.set_item(PAM::Authenticator::User, 0);
@@ -400,16 +404,18 @@ bool App::AuthenticateUser(void){
     return true;
 }
 #else
-bool App::AuthenticateUser(void){
-    LoginPanel->EventHandler(Panel::Get_Name);
-    switch(LoginPanel->getAction()){
-        case Panel::Exit:
-        case Panel::Console:
-            cerr << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
-            return true; // <--- This is simply fake!
-        default:
-            break;
-    };
+bool App::AuthenticateUser(bool focuspass){
+    if (!focuspass){
+        LoginPanel->EventHandler(Panel::Get_Name);
+        switch(LoginPanel->getAction()){
+            case Panel::Exit:
+            case Panel::Console:
+                cerr << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
+                return true; // <--- This is simply fake!
+            default:
+                break;
+        }
+    }
     LoginPanel->EventHandler(Panel::Get_Passwd);
     
     char *encrypted, *correct;

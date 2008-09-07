@@ -57,7 +57,7 @@ private:
     char* StrConcat(const char* str1, const char* str2);
     void UpdatePid();
 
-    bool AuthenticateUser(void);
+    bool AuthenticateUser(bool focuspass);
  
     static std::string findValidRandomTheme(const std::string& set);
     static void replaceVariables(std::string& input,
