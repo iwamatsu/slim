@@ -91,7 +91,8 @@ private:
     void blankScreen();
     Image* image;
     void setBackground(const string& themedir);
-	
+
+    bool firstlogin;
     bool daemonmode;
 	// For testing themes
 	char* testtheme;
