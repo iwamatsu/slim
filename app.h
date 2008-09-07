@@ -94,6 +94,7 @@ private:
 
     bool firstlogin;
     bool daemonmode;
+    bool force_nodaemon;
 	// For testing themes
 	char* testtheme;
     bool testing;

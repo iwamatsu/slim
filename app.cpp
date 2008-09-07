@@ -136,11 +136,13 @@ App::App(int argc, char** argv){
     testing = false;
     mcookie = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     daemonmode = false;
+    force_nodaemon = false;
     firstlogin = true;
     Dpy = NULL;
 
     // Parse command line
-    while((tmp = getopt(argc, argv, "vhp:d?")) != EOF) {
+    // Note: we force a option for nodaemon switch to handle "-nodaemon"
+    while((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
         switch (tmp) {
         case 'p':    // Test theme
             testtheme = optarg;
@@ -153,6 +155,10 @@ App::App(int argc, char** argv){
         case 'd':    // Daemon mode
             daemonmode = true;
             break;
+        case 'n':    // Daemon mode
+            daemonmode = false;
+            force_nodaemon = true;
+            break;
         case 'v':    // Version
             std::cout << APPNAME << " version " << VERSION << endl;
             exit(OK_EXIT);
@@ -163,6 +169,7 @@ App::App(int argc, char** argv){
             cerr << "usage:  " << APPNAME << " [option ...]" << endl
             << "options:" << endl
             << "    -d: daemon mode" << endl
+            << "    -nodaemon: no-daemon mode" << endl
             << "    -v: show version" << endl
             << "    -p /path/to/theme/dir: preview theme" << endl;
             exit(OK_EXIT);
@@ -263,7 +270,7 @@ void App::Run() {
 #ifndef XNEST_DEBUG
         OpenLog();
         
-        if (cfg->getOption("daemon") == "yes") {
+        if (!force_nodaemon && cfg->getOption("daemon") == "yes") {
             daemonmode = true;
         }
 
