@@ -51,6 +51,10 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("msg_color").c_str(), &msgcolor);
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("msg_shadow_color").c_str(), &msgshadowcolor);
     XftColorAllocName(Dpy, visual, colormap, cfg->getOption("intro_color").c_str(), &introcolor);
+    XftColorAllocName(Dpy, DefaultVisual(Dpy, Scr), colormap,
+                      cfg->getOption("session_color").c_str(), &sessioncolor);
+    XftColorAllocName(Dpy, DefaultVisual(Dpy, Scr), colormap,
+                      cfg->getOption("session_shadow_color").c_str(), &sessionshadowcolor);
 
     // Load properties from config / theme
     input_name_x = Cfg::string2int(cfg->getOption("input_name_x").c_str());
@@ -139,6 +143,8 @@ Panel::~Panel() {
     XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &msgcolor);
     XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &welcomecolor);
     XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &entercolor);
+    XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &sessioncolor);
+    XftColorFree (Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &sessionshadowcolor);
     XFreeGC(Dpy, TextGC);
     XftFontClose(Dpy, font);
     XftFontClose(Dpy, msgfont);
@@ -566,23 +572,29 @@ void Panel::SwitchSession() {
 
 // Display session type on the screen
 void Panel::ShowSession() {
+	string msg_x, msg_y;
     XClearWindow(Dpy, Root);
-    string currsession = "Session: " + session;
+    string currsession = cfg->getOption("session_msg") + " " + session;
     XGlyphInfo extents;
-    XftDraw *draw = XftDrawCreate(Dpy, Root,
+	
+	sessionfont = XftFontOpenName(Dpy, Scr, cfg->getOption("session_font").c_str());
+    
+	XftDraw *draw = XftDrawCreate(Dpy, Root,
                                   DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
-    XftTextExtents8(Dpy, msgfont, reinterpret_cast<const XftChar8*>(currsession.c_str()),
+    XftTextExtents8(Dpy, sessionfont, reinterpret_cast<const XftChar8*>(currsession.c_str()),
                     currsession.length(), &extents);
-    int msg_x = Cfg::absolutepos("50%", XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), extents.width);
-    int msg_y = XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)) - extents.height -100;
+    msg_x = cfg->getOption("session_x");
+    msg_y = cfg->getOption("session_y");
+    int x = Cfg::absolutepos(msg_x, XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), extents.width);
+    int y = Cfg::absolutepos(msg_y, XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)), extents.height);
     int shadowXOffset =
-        Cfg::string2int(cfg->getOption("msg_shadow_xoffset").c_str());
+        Cfg::string2int(cfg->getOption("session_shadow_xoffset").c_str());
     int shadowYOffset =
-        Cfg::string2int(cfg->getOption("msg_shadow_yoffset").c_str());
+        Cfg::string2int(cfg->getOption("session_shadow_yoffset").c_str());
 
-    SlimDrawString8(draw, &msgcolor, msgfont, msg_x, msg_y,
+    SlimDrawString8(draw, &sessioncolor, sessionfont, x, y,
                     currsession, 
-                    &msgshadowcolor,
+                    &sessionshadowcolor,
                     shadowXOffset, shadowYOffset);
     XFlush(Dpy);
     XftDrawDestroy(draw);

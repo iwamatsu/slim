@@ -31,6 +31,12 @@ OPTIONS
     msg_x                   50%
     msg_y                   30
 
+    # Color, font, position for the session list
+    session_color           #FFFFFF
+    session_font            Verdana:size=16:bold
+    session_x               50%
+    session_y               90%
+
     # style of background: 'stretch', 'tile', 'center', 'color'
     background_style        stretch
     background_color		#FF0033
@@ -82,8 +88,8 @@ OPTIONS
 
 SHADOWS
 
-    The 'msg', 'input', 'welcome' and 'username' sections support
-    shadows; three values can be configured:
+    The 'msg', 'input', 'welcome', 'session' and 'username' sections
+    support shadows; three values can be configured:
     - color: the shadow color
     - x offset: the offset in x direction, relative to the normal text 
     - y offset: the offset in y direction, relative to the normal text
@@ -112,6 +118,11 @@ SHADOWS
     msg_shadow_xoffset 		1    
     msg_shadow_yoffset 		1    
     msg_shadow_color   		#ff00ff
+
+    # For the session:
+    session_shadow_xoffset 		1    
+    session_shadow_yoffset 		1    
+    session_shadow_color   		#ff00ff
     ----------------------------------------------------------------------
 
     

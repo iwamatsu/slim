@@ -43,6 +43,7 @@ Cfg::Cfg()
     options.insert(option("console_cmd","/usr/bin/xterm -C -fg white -bg black +sb -g %dx%d+%d+%d -fn %dx%d -T ""Console login"" -e /bin/sh -c ""/bin/cat /etc/issue; exec /bin/login"""));
     options.insert(option("screenshot_cmd","import -window root /slim.png"));
     options.insert(option("welcome_msg","Welcome to %host"));
+    options.insert(option("session_msg","Session:"));
     options.insert(option("default_user",""));
     options.insert(option("focus_password","no"));
     options.insert(option("auto_login","no"));
@@ -109,6 +110,15 @@ Cfg::Cfg()
     options.insert(option("msg_shadow_xoffset", "0"));
     options.insert(option("msg_shadow_yoffset", "0"));
     options.insert(option("msg_shadow_color","#FFFFFF"));
+    
+
+    options.insert(option("session_color","#FFFFFF"));
+    options.insert(option("session_font","Verdana:size=16:bold"));
+    options.insert(option("session_x","50%"));
+    options.insert(option("session_y","90%"));
+    options.insert(option("session_shadow_xoffset", "0"));
+    options.insert(option("session_shadow_yoffset", "0"));
+    options.insert(option("session_shadow_color","#FFFFFF"));
 
     error = "";
 
