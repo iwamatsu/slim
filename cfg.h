@@ -22,35 +22,33 @@
 #define THEMESDIR PKGDATADIR"/themes"
 #define THEMESFILE "/slim.theme"
 
-using namespace std;
-
 class Cfg {
 
 public:
     Cfg();
     ~Cfg();
-    bool readConf(string configfile);
-    string parseOption(string line, string option);
-    const string& getError() const;
-    string& getOption(string option);
-    string getWelcomeMessage();
+    bool readConf(std::string configfile);
+    std::string parseOption(std::string line, std::string option);
+    const std::string& getError() const;
+    std::string& getOption(std::string option);
+    std::string getWelcomeMessage();
 
-    static int absolutepos(const string& position, int max, int width);
+    static int absolutepos(const std::string& position, int max, int width);
     static int string2int(const char* string, bool* ok = 0);
-    static void split(vector<string>& v, const string& str, 
+    static void split(std::vector<std::string>& v, const std::string& str, 
                       char c, bool useEmpty=true);
-    static string Trim(const string& s);
+    static std::string Trim(const std::string& s);
 
-    string nextSession(string current);
+    std::string nextSession(std::string current);
 
 private:
     void fillSessionList();
 
 private:
-    map<string,string> options;
-    vector<string> sessions;
+    std::map<std::string,std::string> options;
+    std::vector<std::string> sessions;
     int currentSession;
-    string error;
+    std::string error;
 
 };
 

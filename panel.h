@@ -49,23 +49,23 @@ public:
 
 
     Panel(Display* dpy, int scr, Window root, Cfg* config,
-          const string& themed);
+          const std::string& themed);
     ~Panel();
     void OpenPanel();
     void ClosePanel();
     void ClearPanel();
-    void Message(const string& text);
-    void Error(const string& text);
+    void Message(const std::string& text);
+    void Error(const std::string& text);
     void EventHandler(const FieldType& curfield);
-    string getSession();
+    std::string getSession();
     ActionType getAction(void) const;
 
     void Reset(void);
     void ResetName(void);
     void ResetPasswd(void);
-    void SetName(const string& name);
-    const string& GetName(void) const;
-    const string& GetPasswd(void) const;
+    void SetName(const std::string& name);
+    const std::string& GetName(void) const;
+    const std::string& GetPasswd(void) const;
 private:
     Panel();
     void Cursor(int visible);
@@ -77,7 +77,7 @@ private:
     void ShowSession();
 
     void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
-                            int x, int y, const string& str,
+                            int x, int y, const std::string& str,
                             XftColor* shadowColor,
                             int xOffset, int yOffset);
 
@@ -111,9 +111,9 @@ private:
     FieldType field;
     
     // Username/Password
-    string NameBuffer;
-    string PasswdBuffer;
-    string HiddenPasswdBuffer;
+    std::string NameBuffer;
+    std::string PasswdBuffer;
+    std::string HiddenPasswdBuffer;
 
     // Configuration
     int input_name_x;
@@ -137,8 +137,8 @@ private:
     int username_shadow_yoffset;
     int password_x;
     int password_y;
-    string welcome_message;
-    string intro_message;
+    std::string welcome_message;
+    std::string intro_message;
 
     // Pixmap data
     Pixmap PanelPixmap;
@@ -147,10 +147,10 @@ private:
 
     // For thesting themes
     bool testing;
-    string themedir;
+    std::string themedir;
 
     // Session handling
-    string session;
+    std::string session;
 
 };
 

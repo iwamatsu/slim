@@ -30,6 +30,8 @@
 #include <shadow.h>
 #endif
 
+using namespace std;
+
 #ifdef USE_PAM
 #include <string>
 
