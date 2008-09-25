@@ -75,7 +75,7 @@ private:
     int Scr;
     Panel* LoginPanel;
     int ServerPID;
-    char* DisplayName;
+    const char* DisplayName;
 
 #ifdef USE_PAM
 	PAM::Authenticator pam;

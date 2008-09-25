@@ -728,7 +728,7 @@ void App::Exit() {
 #endif
 
     if (testing) {
-        char* testmsg = "This is a test message :-)";
+        const char* testmsg = "This is a test message :-)";
         LoginPanel->Message(testmsg);
         sleep(3);
         delete LoginPanel;
@@ -831,7 +831,7 @@ int App::WaitForServer() {
         if((Dpy = XOpenDisplay(DisplayName))) {
             return 1;
         } else {
-            if(!ServerTimeout(1, "X server to begin accepting connections"))
+            if(!ServerTimeout(1, (char *) "X server to begin accepting connections"))
                 break;
         }
     }
@@ -885,7 +885,7 @@ int App::StartServer() {
     }
 
     if (!hasVtSet && daemonmode) {
-        server[argc++] = "vt07";
+        server[argc++] = (char*)"vt07";
     }
     server[argc] = NULL;
 
@@ -907,7 +907,7 @@ int App::StartServer() {
 
     default:
         errno = 0;
-        if(!ServerTimeout(0, "")) {
+        if(!ServerTimeout(0, (char *)"")) {
             ServerPID = -1;
             break;
         }
@@ -980,7 +980,7 @@ void App::StopServer() {
     }
 
     // Wait for server to shut down
-    if(!ServerTimeout(10, "X server to shut down")) {
+    if(!ServerTimeout(10, (char *)"X server to shut down")) {
         cerr << endl;
         return;
     }
@@ -995,7 +995,7 @@ void App::StopServer() {
     }
 
     // Wait for server to die
-    if(ServerTimeout(3, "server to die")) {
+    if(ServerTimeout(3, (char*)"server to die")) {
         cerr << endl << APPNAME << ": can't kill server" << endl;
         exit(ERR_EXIT);
     }
@@ -1164,7 +1164,7 @@ void App::CreateServerAuth() {
     int hexcount = 0;
         string authfile;
     string cmd;
-    char *digits = "0123456789abcdef";
+    const char *digits = "0123456789abcdef";
         srand( time(NULL) );
     for ( i = 0; i < 31; i++ ) {
         r = rand()%16;
