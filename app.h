@@ -90,7 +90,7 @@ private:
 
     void blankScreen();
     Image* image;
-    void setBackground(const string& themedir);
+    void setBackground(const std::string& themedir);
 
     bool firstlogin;
     bool daemonmode;
