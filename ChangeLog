@@ -1,8 +1,12 @@
-1.3.1 - XXXX.XX.XX
+1.3.1 - 2008.09.25
     * Added focus_password config option for focusing password
       automatically when default_user is enabled
+    * Added auto_login option
     * Fixed uninitialized daemonmode, see
       http://www.freebsd.org/cgi/query-pr.cgi?pr=114366
+    * Fixed maximum length for password
+    * Introduced customization options for session text:
+      font, colors, position, shadows.
 
 1.3.0 - 2006.07.14
     * Added PAM support by Martin Parm
