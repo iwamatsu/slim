@@ -9,6 +9,7 @@
    (at your option) any later version.
 */
 
+#include <cstdio>
 #include "switchuser.h"
 
 using namespace std;
