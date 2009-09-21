@@ -18,6 +18,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <paths.h>
+#include <cstdio>
 #include <iostream>
 #include "const.h"
 #include "cfg.h"
