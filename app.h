@@ -101,6 +101,8 @@ private:
     
     std::string themeName;
     std::string mcookie;
+
+    const int mcookiesize;
 };
 
 

@@ -7,7 +7,7 @@ CXX=/usr/bin/g++
 CC=/usr/bin/gcc
 CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
 CXXFLAGS=$(CFLAGS)
-LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg
+LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
 CUSTOM=-DHAVE_SHADOW
 ifdef USE_PAM
 LDFLAGS+= -lpam
@@ -25,7 +25,7 @@ VERSION=1.3.1
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
-OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o panel.o
+OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o panel.o util.o
 ifdef USE_PAM
 OBJECTS+=PAM.o
 endif

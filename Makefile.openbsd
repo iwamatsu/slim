@@ -20,7 +20,8 @@ VERSION=1.3.1
 DEFINES=-DPACKAGE=\"$(NAME)\" -DVERSION=\"$(VERSION)\" \
 		-DPKGDATADIR=\"$(PREFIX)/share/slim\" -DSYSCONFDIR=\"$(CFGDIR)\"
 
-OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o panel.o
+OBJECTS=jpeg.o png.o main.o image.o numlock.o cfg.o switchuser.o app.o \
+	util.o panel.o
 
 .SUFFIXES: .c.o .cpp.o
 
