@@ -105,7 +105,10 @@ extern App* LoginApp;
 
 void CatchSignal(int sig) {
     cerr << APPNAME << ": unexpected signal " << sig << endl;
-    LoginApp->StopServer();
+
+    if (LoginApp->serverStarted)
+        LoginApp->StopServer();
+
     LoginApp->RemoveLock();
     exit(ERR_EXIT);
 }
@@ -140,6 +143,7 @@ App::App(int argc, char** argv)
     int tmp;
     ServerPID = -1;
     testing = false;
+    serverStarted = false;
     mcookie = string(App::mcookiesize, 'a');
     daemonmode = false;
     force_nodaemon = false;
@@ -860,6 +864,8 @@ int App::StartServer() {
     char* args = new char[argOption.length()+2]; // NULL plus vt
     strcpy(args, argOption.c_str());
 
+    serverStarted = false;
+
     int argc = 1;
     int pos = 0;
     bool hasVtSet = false;
@@ -939,6 +945,8 @@ int App::StartServer() {
     }
     
     delete args;
+
+    serverStarted = true;
 
     return ServerPID;
 }

@@ -36,6 +36,7 @@ public:
     int GetServerPID();
     void StopServer();
 
+	bool serverStarted;
     // Lock functions
     void GetLock();
     void RemoveLock();
