@@ -1,3 +1,7 @@
+1.3.2 - 2010.07.08
+    * Add support xauth secret.
+    * Add xnest_debug mode.
+
 1.3.1 - 2008.09.26
     * Added focus_password config option for focusing password
       automatically when default_user is enabled
