@@ -42,4 +42,7 @@
 // variables replaced in pre-session_cmd and post-session_cmd
 #define USER_VAR       "%user"
 
+// max height/width for images
+#define MAX_DIMENSION 10000
+
 #endif
