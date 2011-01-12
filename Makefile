@@ -4,7 +4,7 @@
 # to fit into your operating system / distribution
 #######################################################
 CXX=/usr/bin/g++
-CC=/usr/bin/gcc
+CC=/usr/bin/gcc-4.5
 CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
@@ -33,7 +33,7 @@ endif
 all: slim
 
 slim: $(OBJECTS)
-	$(CXX) $(LDFLAGS) $(OBJECTS) -o $(NAME)
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $(NAME)
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(DEFINES) $(CUSTOM) -c $< -o $@
