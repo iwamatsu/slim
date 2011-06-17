@@ -236,8 +236,6 @@ void App::Run() {
         pam.start("slim");
         pam.set_item(PAM::Authenticator::TTY, DisplayName);
         pam.set_item(PAM::Authenticator::Requestor, "root");
-        pam.set_item(PAM::Authenticator::Host, "localhost");
-
     }
     catch(PAM::Exception& e){
         cerr << APPNAME << ": " << e << endl;
