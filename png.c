@@ -57,8 +57,12 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
         png_destroy_read_struct(&png_ptr, (png_infopp) NULL, 
                                 (png_infopp) NULL);
     }
-  
+
+#if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
+	if (setjmp(png_jmpbuf((data->png_ptr))))
+#else
     if (setjmp(png_ptr->jmpbuf))
+#endif
         goto png_destroy;
   
     png_init_io(png_ptr, infile);

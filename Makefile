@@ -5,9 +5,9 @@
 #######################################################
 CXX=/usr/bin/g++
 CC=/usr/bin/gcc-4.5
-CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng12 -I/usr/include
+CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include
 CXXFLAGS=$(CFLAGS)
-LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng12 -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
+LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
 CUSTOM=-DHAVE_SHADOW
 ifdef USE_PAM
 LDFLAGS+= -lpam
