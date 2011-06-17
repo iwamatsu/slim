@@ -278,20 +278,22 @@ void App::Run() {
         signal(SIGALRM, AlarmSignal);
 
 #ifndef XNEST_DEBUG
-        OpenLog();
-        
         if (!force_nodaemon && cfg->getOption("daemon") == "yes") {
             daemonmode = true;
         }
 
         // Daemonize
         if (daemonmode) {
-            if (daemon(0, 1) == -1) {
+            if (daemon(0, 0) == -1) {
                 cerr << APPNAME << ": " << strerror(errno) << endl;
                 exit(ERR_EXIT);
             }
-            UpdatePid();
         }
+
+        OpenLog();
+
+        if (daemonmode)
+            UpdatePid();
 
         CreateServerAuth();
         StartServer();
