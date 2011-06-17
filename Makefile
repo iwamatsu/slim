@@ -3,8 +3,8 @@
 # Edit the following section to adjust the options
 # to fit into your operating system / distribution
 #######################################################
-CXX=/usr/bin/g++
-CC=/usr/bin/gcc-4.5
+CXX=g++
+CC=gcc
 CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
