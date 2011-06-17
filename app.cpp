@@ -104,6 +104,11 @@ int conv(int num_msg, const struct pam_message **msg,
 
 extern App* LoginApp;
 
+int xioerror(Display *disp) {
+	LoginApp->RestartServer();
+    return 0;
+}
+
 void CatchSignal(int sig) {
     cerr << APPNAME << ": unexpected signal " << sig << endl;
 
@@ -113,19 +118,6 @@ void CatchSignal(int sig) {
     LoginApp->RemoveLock();
     exit(ERR_EXIT);
 }
-
-
-void AlarmSignal(int sig) {
-    int pid = LoginApp->GetServerPID();
-    if(waitpid(pid, NULL, WNOHANG) == pid) {
-        LoginApp->StopServer();
-        LoginApp->RemoveLock();
-        exit(OK_EXIT);
-    }
-    signal(sig, AlarmSignal);
-    alarm(2);
-}
-
 
 void User1Signal(int sig) {
     signal(sig, User1Signal);
@@ -275,7 +267,6 @@ void App::Run() {
         signal(SIGHUP, CatchSignal);
         signal(SIGPIPE, CatchSignal);
         signal(SIGUSR1, User1Signal);
-        signal(SIGALRM, AlarmSignal);
 
 #ifndef XNEST_DEBUG
         if (!force_nodaemon && cfg->getOption("daemon") == "yes") {
@@ -297,7 +288,6 @@ void App::Run() {
 
         CreateServerAuth();
         StartServer();
-        alarm(2);
 #endif
 
     }
@@ -613,6 +603,8 @@ void App::Login() {
     int status;
     while (wpid != pid) {
         wpid = wait(&status);
+		if (wpid == ServerPID)
+			xioerror(Dpy);	// Server died, simulate IO error
     }
     if (WIFEXITED(status) && WEXITSTATUS(status)) {
         LoginPanel->Message("Failed to execute login command");
@@ -658,9 +650,6 @@ void App::Login() {
 
 
 void App::Reboot() {
-    // Stop alarm clock
-    alarm(0);
-
 #ifdef USE_PAM
     try{
         pam.end();
@@ -683,9 +672,6 @@ void App::Reboot() {
 
 
 void App::Halt() {
-    // Stop alarm clock
-    alarm(0);
-
 #ifdef USE_PAM
     try{
         pam.end();
@@ -771,6 +757,7 @@ void App::RestartServer() {
 
     StopServer(); 
     RemoveLock();
+	while (waitpid(-1, NULL, WNOHANG) > 0); // Collects all dead childrens
     Run();
 } 
 
@@ -841,6 +828,7 @@ int App::WaitForServer() {
 
     for(cycles = 0; cycles < ncycles; cycles++) {
         if((Dpy = XOpenDisplay(DisplayName))) {
+            XSetIOErrorHandler(xioerror);
             return 1;
         } else {
             if(!ServerTimeout(1, (char *) "X server to begin accepting connections"))
@@ -925,9 +913,6 @@ int App::StartServer() {
             ServerPID = -1;
             break;
         }
-        alarm(15);
-        pause();
-        alarm(0);
 
         // Wait for server to start up
         if(WaitForServer() == 0) {
@@ -962,15 +947,12 @@ int IgnoreXIO(Display *d) {
 
 
 void App::StopServer() {
-    // Stop alars clock and ignore signals
-    alarm(0);
     signal(SIGQUIT, SIG_IGN);
     signal(SIGINT, SIG_IGN);
     signal(SIGHUP, SIG_IGN);
     signal(SIGPIPE, SIG_IGN);
     signal(SIGTERM, SIG_DFL);
     signal(SIGKILL, SIG_DFL);
-    signal(SIGALRM, SIG_DFL);
 
     // Catch X error
     XSetIOErrorHandler(IgnoreXIO);

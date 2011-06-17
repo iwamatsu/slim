@@ -34,6 +34,7 @@ public:
     ~App();
     void Run();
     int GetServerPID();
+    void RestartServer();
     void StopServer();
 
 	bool serverStarted;
@@ -49,7 +50,6 @@ private:
     void Console();
     void Exit();
     void KillAllClients(Bool top);
-    void RestartServer();
     void ReadConfig();
     void OpenLog();
     void CloseLog();
