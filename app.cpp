@@ -843,7 +843,7 @@ int App::WaitForServer() {
 
 
 int App::StartServer() {
-    ServerPID = vfork();
+    ServerPID = fork();
 
     static const int MAX_XSERVER_ARGS = 256;
     static char* server[MAX_XSERVER_ARGS+2] = { NULL };
