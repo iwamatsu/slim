@@ -5,7 +5,7 @@
 #######################################################
 CXX=g++
 CC=gcc
-CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include
+CFLAGS=-Wall -I. -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/usr/include/libpng -I/usr/include
 CXXFLAGS=$(CFLAGS)
 LDFLAGS=-lXft -lX11 -lfreetype -lXrender -lfontconfig -lpng -lz -lm -lcrypt -lXmu -lpng -ljpeg -lrt
 CUSTOM=-DHAVE_SHADOW
