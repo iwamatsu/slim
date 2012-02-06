@@ -59,7 +59,7 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
     }
 
 #if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
-	if (setjmp(png_jmpbuf((data->png_ptr))))
+	if (setjmp(png_jmpbuf((png_ptr))))
 #else
     if (setjmp(png_ptr->jmpbuf))
 #endif
