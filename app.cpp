@@ -541,6 +541,7 @@ void App::Login() {
     try{
         if(term) pam.setenv("TERM", term);
         pam.setenv("HOME", pw->pw_dir);
+        pam.setenv("PWD", pw->pw_dir);
         pam.setenv("SHELL", pw->pw_shell);
         pam.setenv("USER", pw->pw_name);
         pam.setenv("LOGNAME", pw->pw_name);
@@ -564,11 +565,12 @@ void App::Login() {
         char** child_env = pam.getenvlist();
         pam.end();
 #else
-        const int Num_Of_Variables = 10; // Number of env. variables + 1
+        const int Num_Of_Variables = 11; // Number of env. variables + 1
         char** child_env = static_cast<char**>(malloc(sizeof(char*)*Num_Of_Variables));
         int n = 0;
         if(term) child_env[n++]=StrConcat("TERM=", term);
         child_env[n++]=StrConcat("HOME=", pw->pw_dir);
+        child_env[n++]=StrConcat("PWD=", pw->pw_dir);
         child_env[n++]=StrConcat("SHELL=", pw->pw_shell);
         child_env[n++]=StrConcat("USER=", pw->pw_name);
         child_env[n++]=StrConcat("LOGNAME=", pw->pw_name);
