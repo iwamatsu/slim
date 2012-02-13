@@ -928,9 +928,9 @@ int App::StartServer() {
 
     string numlock = cfg->getOption("numlock");
     if (numlock == "on") {
-        NumLock::setOn();
+        NumLock::setOn(Dpy);
     } else if (numlock == "off") {
-        NumLock::setOff();
+        NumLock::setOff(Dpy);
     }
     
     delete args;
