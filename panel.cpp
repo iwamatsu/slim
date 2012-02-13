@@ -622,11 +622,9 @@ void Panel::SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
     XftDrawString8(d, color, font, x, y, reinterpret_cast<const FcChar8*>(str.c_str()), str.length());
 }
 
-
 Panel::ActionType Panel::getAction(void) const{
     return action;
 };
-
 
 void Panel::Reset(void){
     ResetName();
@@ -644,11 +642,13 @@ void Panel::ResetPasswd(void){
 
 void Panel::SetName(const string& name){
     NameBuffer=name;
-    return;
+    action = Login;
 };
+
 const string& Panel::GetName(void) const{
     return NameBuffer;
 };
+
 const string& Panel::GetPasswd(void) const{
     return PasswdBuffer;
 };
