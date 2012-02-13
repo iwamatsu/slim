@@ -10,6 +10,7 @@
 */
 
 #include <sstream>
+#include <poll.h>
 #include "panel.h"
 
 using namespace std;
@@ -288,16 +289,24 @@ void Panel::EventHandler(const Panel::FieldType& curfield) {
     field=curfield;
     bool loop = true;
     OnExpose();
-    while(loop) {
-        XNextEvent(Dpy, &event);
-        switch(event.type) {
-            case Expose:
-                OnExpose();
-                break;
 
-            case KeyPress:
-                loop=OnKeyPress(event);
-                break;
+    struct pollfd x11_pfd = {0};
+    x11_pfd.fd = ConnectionNumber(Dpy);
+    x11_pfd.events = POLLIN;
+    while(loop) {
+        if(XPending(Dpy) || poll(&x11_pfd, 1, -1) > 0) {
+            while(XPending(Dpy)) {
+                XNextEvent(Dpy, &event);
+                switch(event.type) {
+                    case Expose:
+                        OnExpose();
+                        break;
+
+                    case KeyPress:
+                        loop=OnKeyPress(event);
+                        break;
+                }
+            }
         }
     }
 
