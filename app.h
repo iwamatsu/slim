@@ -27,6 +27,9 @@
 #ifdef USE_PAM
 #include "PAM.h"
 #endif
+#ifdef USE_CONSOLEKIT
+#include "Ck.h"
+#endif
 
 class App {
 public:
@@ -80,6 +83,9 @@ private:
 
 #ifdef USE_PAM
 	PAM::Authenticator pam;
+#endif
+#ifdef USE_CONSOLEKIT
+    Ck::Session ck;
 #endif
 
     // Options

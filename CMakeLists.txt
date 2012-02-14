@@ -56,6 +56,7 @@ set(slim_srcs
 	switchuser.cpp
 	util.cpp
 	PAM.cpp
+	Ck.cpp
 	png.c
 	jpeg.c
 )
@@ -95,6 +96,33 @@ if(USE_PAM)
 else(USE_PAM)
 	message("\tPAM disabled")
 endif(USE_PAM)
+
+# ConsoleKit
+if(USE_CONSOLEKIT)
+	find_package(CkConnector)
+	message("\tConsoleKit Enabled")
+	if(CKCONNECTOR_FOUND)
+		message("\tConsoleKit Found")
+		# DBus check
+		find_package(DBus REQUIRED)
+		if(DBUS_FOUND)
+			message("\tDBus Found")
+			target_link_libraries(${PROJECT_NAME} ${DBUS_LIBRARIES})
+			include_directories(${DBUS_ARCH_INCLUDE_DIR})
+			include_directories(${DBUS_INCLUDE_DIR})
+			set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_CONSOLEKIT")
+			target_link_libraries(${PROJECT_NAME} ${CKCONNECTOR_LIBRARIES})
+			include_directories(${CKCONNECTOR_INCLUDE_DIR})
+		else(DBUS_FOUND)
+			message("\tDBus Not Found")
+		endif(DBUS_FOUND)
+	else(CKCONNECTOR_FOUND)
+		message("\tConsoleKit Not Found")
+		message("\tConsoleKit disabled")
+	endif(CKCONNECTOR_FOUND)
+else(USE_CONSOLEKIT)
+	message("\tConsoleKit disabled")
+endif(USE_CONSOLEKIT)
 
 # system librarys
 find_library(M_LIB m)
