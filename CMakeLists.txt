@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
 
-		set(PROJECT_NAME slim)
+set(PROJECT_NAME slim)
 project(${PROJECT_NAME})
 
 #Pretty colors
@@ -55,11 +55,16 @@ set(slim_srcs
 	panel.cpp
 	switchuser.cpp
 	util.cpp
-	PAM.cpp
-	Ck.cpp
 	png.c
 	jpeg.c
 )
+
+if(USE_PAM)
+	set(slim_srcs ${slim_srcs} PAM.cpp)
+endif(USE_PAM)
+if(USE_CONSOLEKIT)
+	set(slim_srcs ${slim_srcs} Ck.cpp)
+endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
 
@@ -73,9 +78,8 @@ find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
 
-set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
-
 # Fontconfig
+set(FONTCONFIG_DIR ${CMAKE_MODULE_PATH})
 find_package(FONTCONFIG REQUIRED)
 if(FONTCONFIG_FOUND)
 	message("\tFontConfig Found")
@@ -85,13 +89,15 @@ endif(FONTCONFIG_FOUND)
 
 # PAM
 if(USE_PAM)
-	set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
+	message("\tPAM Enabled")
 	find_package(PAM)
 	if(PAM_FOUND)
-		message("\tPAM Enabled")
 		message("\tPAM Found")
+		set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
 		target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
 		include_directories(${PAM_INCLUDE_DIR})
+	else(PAM_FOUND)
+		message("\tPAM Not Found")
 	endif(PAM_FOUND)
 else(USE_PAM)
 	message("\tPAM disabled")
@@ -157,7 +163,7 @@ target_link_libraries(${PROJECT_NAME}
 	${PNG_LIBRARIES}
 	)
 
-# install
+####### install
 # slim
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
 # man file
