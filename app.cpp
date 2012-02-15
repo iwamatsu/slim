@@ -112,7 +112,7 @@ int xioerror(Display *disp) {
 void CatchSignal(int sig) {
     cerr << APPNAME << ": unexpected signal " << sig << endl;
 
-    if (LoginApp->serverStarted)
+    if (LoginApp->isServerStarted())
         LoginApp->StopServer();
 
     LoginApp->RemoveLock();
@@ -1136,6 +1136,11 @@ void App::GetLock() {
 // Remove lockfile and close logs
 void App::RemoveLock() {
     remove(cfg->getOption("lockfile").c_str());
+}
+
+// Get server start check flag.
+bool App::isServerStarted() {
+    return serverStarted;
 }
 
 // Redirect stdout and stderr to log file

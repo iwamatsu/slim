@@ -40,10 +40,11 @@ public:
     void RestartServer();
     void StopServer();
 
-	bool serverStarted;
     // Lock functions
     void GetLock();
     void RemoveLock();
+
+    bool isServerStarted();
 
 private:
     void Login();
@@ -80,6 +81,7 @@ private:
     Panel* LoginPanel;
     int ServerPID;
     const char* DisplayName;
+    bool serverStarted;
 
 #ifdef USE_PAM
 	PAM::Authenticator pam;
