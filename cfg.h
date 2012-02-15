@@ -31,6 +31,7 @@ public:
     std::string parseOption(std::string line, std::string option);
     const std::string& getError() const;
     std::string& getOption(std::string option);
+    int getIntOption(std::string option, int defaultVal = 0);
     std::string getWelcomeMessage();
 
     static int absolutepos(const std::string& position, int max, int width);
