@@ -1,6 +1,6 @@
 README file for SLiM
 
-Simone Rota <sip@varlock.com>
+Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
 INTRODUCTION
     SLiM (Simple Login Manager) is a graphical login manager for X11.
@@ -14,7 +14,7 @@ INTRODUCTION
     - PNG / JPEG support for backgrounds
     - XFT / freetype support
     - Double or single (GDM-style) inputbox support
-    - Automake-based build procedure
+    - CMake build procedure
 
 INSTALLATION
     see the INSTALL file
@@ -47,8 +47,9 @@ THEMES
     See THEMES
 
 COPYRIGHT
-    SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann
-    and is available under the GNU General Public License.
+    SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann,
+    Nobuhiro Iwamatsu and is available under the GNU General Public
+    License.
     See the COPYING file for the complete license.
 
     Image handling code adapted and extended from xplanet 1.0.1,
