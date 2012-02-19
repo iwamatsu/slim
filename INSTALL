@@ -1,6 +1,7 @@
 INSTALL file for SLiM
 
 0. Prerequisites:
+ - cmake
  - X.org or XFree86
  - libxmu
  - libpng
@@ -8,15 +9,13 @@ INSTALL file for SLiM
 
 1. to build and install the program:
  - edit the Makefile to adjust libraries and paths to your OS (if needed)
- - make
+ - mkdir build ; cd build ; cmake ..
      or
- - make USE_PAM=1 to enable PAM support 
- - make install
+ - mkdir build ; cd build ; cmake .. -DUSE_PAM=yes to enable PAM support
+     or
+ - mkdir build ; cd build ; cmake .. -DUSE_CONSOLEKIT=yes
+   to enable CONSOLEKIT support
+ - make && make install
  
-Pre-configured makefiles for some platform are available,
-i.e. for FreeBSD use:
-	- make -f Makefile.freebsd
-	- make -f Makefile.freebsd install
-
 2. automatic startup
 Edit the init scripts according to your OS/Distribution.
