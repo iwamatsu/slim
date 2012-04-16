@@ -68,9 +68,9 @@ void NumLock::control_numlock(Display *dpy, bool flag) {
         return;
 
     if( flag == true )
-        XkbLockModifiers ( dpy, XkbUseCoreKbd, mask, 0);
-    else
         XkbLockModifiers ( dpy, XkbUseCoreKbd, mask, mask);
+    else
+        XkbLockModifiers ( dpy, XkbUseCoreKbd, mask, 0);
 }
 
 void NumLock::setOn(Display *dpy) {

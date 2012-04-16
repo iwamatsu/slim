@@ -332,6 +332,15 @@ void App::Run() {
             Login();
         }
     }
+
+    // Set NumLock
+    string numlock = cfg->getOption("numlock");
+    if (numlock == "on") {
+        NumLock::setOn(Dpy);
+    } else if (numlock == "off") {
+        NumLock::setOff(Dpy);
+    }
+    
     // Start looping
     int panelclosed = 1;
     Panel::ActionType Action;
@@ -971,13 +980,6 @@ int App::StartServer() {
         break;
     }
 
-    string numlock = cfg->getOption("numlock");
-    if (numlock == "on") {
-        NumLock::setOn(Dpy);
-    } else if (numlock == "off") {
-        NumLock::setOff(Dpy);
-    }
-    
     delete args;
 
     serverStarted = true;
