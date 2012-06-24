@@ -84,7 +84,7 @@ int conv(int num_msg, const struct pam_message **msg,
             case PAM_TEXT_INFO:
                 // We simply write these to the log
                 // TODO: Maybe we should simply ignore them
-                cerr << APPNAME << ": " << msg[i]->msg << endl;
+                logStream << APPNAME << ": " << msg[i]->msg << endl;
                 break;
         }
         if (result!=PAM_SUCCESS) break;
@@ -110,7 +110,7 @@ int xioerror(Display *disp) {
 }
 
 void CatchSignal(int sig) {
-    cerr << APPNAME << ": unexpected signal " << sig << endl;
+    logStream << APPNAME << ": unexpected signal " << sig << endl;
 
     if (LoginApp->isServerStarted())
         LoginApp->StopServer();
@@ -151,7 +151,7 @@ App::App(int argc, char** argv)
             testtheme = optarg;
             testing = true;
             if (testtheme == NULL) {
-                cerr << "The -p option requires an argument" << endl;
+                logStream << "The -p option requires an argument" << endl;
                 exit(ERR_EXIT);
             }
             break;
@@ -167,9 +167,9 @@ App::App(int argc, char** argv)
             exit(OK_EXIT);
             break;
         case '?':    // Illegal
-            cerr << endl;
+            logStream << endl;
         case 'h':   // Help
-            cerr << "usage:  " << APPNAME << " [option ...]" << endl
+            logStream << "usage:  " << APPNAME << " [option ...]" << endl
             << "options:" << endl
             << "    -d: daemon mode" << endl
             << "    -nodaemon: no-daemon mode" << endl
@@ -181,7 +181,7 @@ App::App(int argc, char** argv)
     }
 #ifndef XNEST_DEBUG 
     if (getuid() != 0 && !testing) {
-        cerr << APPNAME << ": only root can run this program" << endl;
+        logStream << APPNAME << ": only root can run this program" << endl;
         exit(ERR_EXIT);
     }
 #endif /* XNEST_DEBUG */
@@ -230,7 +230,7 @@ void App::Run() {
         pam.set_item(PAM::Authenticator::Requestor, "root");
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         exit(ERR_EXIT);
     };
 #endif
@@ -241,11 +241,11 @@ void App::Run() {
         themefile = themedir + THEMESFILE;
         if (!cfg->readConf(themefile)) {
             if (themeName == "default") {
-                cerr << APPNAME << ": Failed to open default theme file "
+                logStream << APPNAME << ": Failed to open default theme file "
                      << themefile << endl;
                 exit(ERR_EXIT);
             } else {
-                cerr << APPNAME << ": Invalid theme in config: "
+                logStream << APPNAME << ": Invalid theme in config: "
                      << themeName << endl;
                 themeName = "default";
             }
@@ -276,7 +276,7 @@ void App::Run() {
         // Daemonize
         if (daemonmode) {
             if (daemon(0, 0) == -1) {
-                cerr << APPNAME << ": " << strerror(errno) << endl;
+                logStream << APPNAME << ": " << strerror(errno) << endl;
                 exit(ERR_EXIT);
             }
         }
@@ -294,7 +294,7 @@ void App::Run() {
 
     // Open display
     if((Dpy = XOpenDisplay(DisplayName)) == 0) {
-        cerr << APPNAME << ": could not open display '"
+        logStream << APPNAME << ": could not open display '"
              << DisplayName << "'" << endl;
         if (!testing) StopServer();
         exit(ERR_EXIT);
@@ -425,11 +425,11 @@ bool App::AuthenticateUser(bool focuspass){
             default:
                 break;
         };
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         return false;
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         exit(ERR_EXIT);
     };
     return true;
@@ -441,7 +441,7 @@ bool App::AuthenticateUser(bool focuspass){
         switch(LoginPanel->getAction()){
             case Panel::Exit:
             case Panel::Console:
-                cerr << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
+                logStream << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
                 return true; // <--- This is simply fake!
             default:
                 break;
@@ -518,11 +518,11 @@ void App::Login() {
     }
     catch(PAM::Cred_Exception& e){
         // Credentials couldn't be established
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         return;
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         exit(ERR_EXIT);
     };
 #else
@@ -560,7 +560,7 @@ void App::Login() {
         pam.setenv("XAUTHORITY", xauthority.c_str());
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         exit(ERR_EXIT);
     }
 #endif
@@ -571,7 +571,7 @@ void App::Login() {
         ck.open_session(DisplayName, pw->pw_uid);
     }
     catch(Ck::Exception &e) {
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
         exit(ERR_EXIT);
     }
 #endif
@@ -669,7 +669,7 @@ void App::Login() {
         ck.close_session();
     }
     catch(Ck::Exception &e) {
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -678,7 +678,7 @@ void App::Login() {
         pam.close_session();
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -711,7 +711,7 @@ void App::Reboot() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -733,7 +733,7 @@ void App::Halt() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -777,7 +777,7 @@ void App::Exit() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -807,7 +807,7 @@ void App::RestartServer() {
         pam.end();
     }
     catch(PAM::Exception& e){
-        cerr << APPNAME << ": " << e << endl;
+        logStream << APPNAME << ": " << e << endl;
     };
 #endif
 
@@ -860,9 +860,9 @@ int App::ServerTimeout(int timeout, char* text) {
             break;
         if(timeout) {
             if(i == 0 && text != lasttext)
-                cerr << endl << APPNAME << ": waiting for " << text;
+                logStream << endl << APPNAME << ": waiting for " << text;
             else
-                cerr << ".";
+                logStream << ".";
         }
         if(timeout)
             sleep(1);
@@ -871,7 +871,7 @@ int App::ServerTimeout(int timeout, char* text) {
     }
 
     if(i > 0)
-        cerr << endl;
+        logStream << endl;
     lasttext = text;
 
     return (ServerPID != pidfound);
@@ -892,7 +892,7 @@ int App::WaitForServer() {
         }
     }
 
-    cerr << "Giving up." << endl;
+    logStream << "Giving up." << endl;
 
     return 0;
 }
@@ -956,7 +956,7 @@ int App::StartServer() {
 
 
         execvp(server[0], server);
-        cerr << APPNAME << ": X server could not be started" << endl;
+        logStream << APPNAME << ": X server could not be started" << endl;
         exit(ERR_EXIT);
         break;
 
@@ -972,7 +972,7 @@ int App::StartServer() {
 
         // Wait for server to start up
         if(WaitForServer() == 0) {
-            cerr << APPNAME << ": unable to connect to X server" << endl;
+            logStream << APPNAME << ": unable to connect to X server" << endl;
             StopServer();
             ServerPID = -1;
             exit(ERR_EXIT);
@@ -990,7 +990,7 @@ int App::StartServer() {
 
 jmp_buf CloseEnv;
 int IgnoreXIO(Display *d) {
-    cerr << APPNAME << ": connection to X server lost." << endl;
+    logStream << APPNAME << ": connection to X server lost." << endl;
     longjmp(CloseEnv, 1);
 }
 
@@ -1011,7 +1011,7 @@ void App::StopServer() {
     // Send HUP to process group
     errno = 0;
     if((killpg(getpid(), SIGHUP) != 0) && (errno != ESRCH))
-        cerr << APPNAME << ": can't send HUP to process group " << getpid() << endl;
+        logStream << APPNAME << ": can't send HUP to process group " << getpid() << endl;
 
     // Send TERM to server
     if(ServerPID < 0)
@@ -1019,7 +1019,7 @@ void App::StopServer() {
     errno = 0;
     if(killpg(ServerPID, SIGTERM) < 0) {
         if(errno == EPERM) {
-            cerr << APPNAME << ": can't kill X server" << endl;
+            logStream << APPNAME << ": can't kill X server" << endl;
             exit(ERR_EXIT);
         }
         if(errno == ESRCH)
@@ -1028,11 +1028,11 @@ void App::StopServer() {
 
     // Wait for server to shut down
     if(!ServerTimeout(10, (char *)"X server to shut down")) {
-        cerr << endl;
+        logStream << endl;
         return;
     }
 
-    cerr << endl << APPNAME << ":  X server slow to shut down, sending KILL signal." << endl;
+    logStream << endl << APPNAME << ":  X server slow to shut down, sending KILL signal." << endl;
 
     // Send KILL to server
     errno = 0;
@@ -1043,10 +1043,10 @@ void App::StopServer() {
 
     // Wait for server to die
     if(ServerTimeout(3, (char*)"server to die")) {
-        cerr << endl << APPNAME << ": can't kill server" << endl;
+        logStream << endl << APPNAME << ": can't kill server" << endl;
         exit(ERR_EXIT);
     }
-    cerr << endl;
+    logStream << endl;
 }
 
 
@@ -1105,7 +1105,7 @@ void App::GetLock() {
         // no lockfile present, create one
         std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
         if (!lockfile) {
-            cerr << APPNAME << ": Could not create lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+            logStream << APPNAME << ": Could not create lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
             exit(ERR_EXIT);
         }
         lockfile << getpid() << std::endl;
@@ -1119,13 +1119,13 @@ void App::GetLock() {
             // see if process with this pid exists
             int ret = kill(pid, 0);
             if (ret == 0 || (ret == -1 && errno == EPERM) ) {
-                cerr << APPNAME << ": Another instance of the program is already running with PID " << pid << std::endl;
+                logStream << APPNAME << ": Another instance of the program is already running with PID " << pid << std::endl;
                 exit(0);
             } else {
-                cerr << APPNAME << ": Stale lockfile found, removing it" << std::endl;
+                logStream << APPNAME << ": Stale lockfile found, removing it" << std::endl;
                 std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
                 if (!lockfile) {
-                    cerr << APPNAME << ": Could not create new lock file: " << cfg->getOption("lockfile") << std::endl;
+                    logStream << APPNAME << ": Could not create new lock file: " << cfg->getOption("lockfile") << std::endl;
                     exit(ERR_EXIT);
                 }
                 lockfile << getpid() << std::endl;
@@ -1147,24 +1147,23 @@ bool App::isServerStarted() {
 
 // Redirect stdout and stderr to log file
 void App::OpenLog() {
-    FILE *log = fopen (cfg->getOption("logfile").c_str(),"a");
-    if (!log) {
-        cerr <<  APPNAME << ": Could not accesss log file: " << cfg->getOption("logfile") << endl;
+
+    if ( !logStream.openLog( cfg->getOption("logfile").c_str() ) ) {
+        logStream <<  APPNAME << ": Could not accesss log file: " << cfg->getOption("logfile") << endl;
         RemoveLock();
         exit(ERR_EXIT);
     }
-    fclose(log);
-    freopen (cfg->getOption("logfile").c_str(),"a",stdout);
-    setvbuf(stdout, NULL, _IOLBF, BUFSIZ);
-    freopen (cfg->getOption("logfile").c_str(),"a",stderr);
-    setvbuf(stderr, NULL, _IONBF, BUFSIZ);
+    //
+    // I should set the buffers to imediate write, but I just flush on every
+    // << operation.
+    //
+    //
 }
-
 
 // Relases stdout/err
 void App::CloseLog(){
-    fclose(stderr);
-    fclose(stdout);
+	// Simply closing the log
+	logStream.closeLog();
 }
 
 string App::findValidRandomTheme(const string& set)
@@ -1189,7 +1188,7 @@ string App::findValidRandomTheme(const string& set)
         themefile = string(THEMESDIR) +"/" + name + THEMESFILE;
         if (stat(themefile.c_str(), &buf) != 0) {
             themes.erase(find(themes.begin(), themes.end(), name));
-            cerr << APPNAME << ": Invalid theme in config: "
+            logStream << APPNAME << ": Invalid theme in config: "
                  << name << endl;
             name = "";
         }
@@ -1249,7 +1248,7 @@ char* App::StrConcat(const char* str1, const char* str2) {
 void App::UpdatePid() {
     std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
     if (!lockfile) {
-        cerr << APPNAME << ": Could not update lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+        logStream << APPNAME << ": Could not update lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
         exit(ERR_EXIT);
     }
     lockfile << getpid() << std::endl;

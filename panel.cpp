@@ -79,7 +79,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
         panelpng = themedir + "/panel.jpg";
         loaded = image->Read(panelpng.c_str());
         if (!loaded) {
-            cerr << APPNAME
+            logStream << APPNAME
                  << ": could not load panel image for theme '"
                  << basename((char*)themedir.c_str()) << "'"
                  << endl;
@@ -96,7 +96,7 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
             panelpng = themedir + "/background.jpg";
             loaded = bg->Read(panelpng.c_str());
             if (!loaded){
-                cerr << APPNAME
+                logStream << APPNAME
                      << ": could not load background image for theme '"
                      << basename((char*)themedir.c_str()) << "'"
                      << endl;
@@ -234,9 +234,9 @@ unsigned long Panel::GetColor(const char* colorname) {
     color.pixel = 0;
 
     if(!XParseColor(Dpy, attributes.colormap, colorname, &color))
-        cerr << APPNAME << ": can't parse color " << colorname << endl;
+        logStream << APPNAME << ": can't parse color " << colorname << endl;
     else if(!XAllocColor(Dpy, attributes.colormap, &color))
-        cerr << APPNAME << ": can't allocate color " << colorname << endl;
+        logStream << APPNAME << ": can't allocate color " << colorname << endl;
 
     return color.pixel;
 }

@@ -55,6 +55,7 @@ set(slim_srcs
 	panel.cpp
 	switchuser.cpp
 	util.cpp
+	log.cpp
 	png.c
 	jpeg.c
 )

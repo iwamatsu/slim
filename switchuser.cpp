@@ -24,11 +24,9 @@ SwitchUser::SwitchUser(struct passwd *pw, Cfg *c, const string& display,
 {
 }
 
-
 SwitchUser::~SwitchUser() {
     // Never called
 }
-
 
 void SwitchUser::Login(const char* cmd, const char* mcookie) {
     SetUserId();
@@ -36,22 +34,20 @@ void SwitchUser::Login(const char* cmd, const char* mcookie) {
     Execute(cmd);
 }
 
-
 void SwitchUser::SetUserId() {
     if( (Pw == 0) ||
             (initgroups(Pw->pw_name, Pw->pw_gid) != 0) ||
             (setgid(Pw->pw_gid) != 0) ||
             (setuid(Pw->pw_uid) != 0) ) {
-        cerr << APPNAME << ": could not switch user id" << endl;
+        logStream << APPNAME << ": could not switch user id" << endl;
         exit(ERR_EXIT);
     }
 }
 
-
 void SwitchUser::Execute(const char* cmd) {
     chdir(Pw->pw_dir);
     execle(Pw->pw_shell, Pw->pw_shell, "-c", cmd, NULL, env);
-    cerr << APPNAME << ": could not execute login command" << endl;
+    logStream << APPNAME << ": could not execute login command" << endl;
 }
 
 void SwitchUser::SetClientAuth(const char* mcookie) {

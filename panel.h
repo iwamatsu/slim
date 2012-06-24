@@ -28,9 +28,8 @@
 #endif
 
 #include "switchuser.h"
-#include "const.h"
+#include "log.h"
 #include "image.h"
-
 
 class Panel {
 public:

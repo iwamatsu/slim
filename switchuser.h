@@ -20,7 +20,7 @@
 #include <paths.h>
 #include <cstdio>
 #include <iostream>
-#include "const.h"
+#include "log.h"
 #include "cfg.h"
 
 
@@ -44,6 +44,4 @@ private:
     char** env;
 };
 
-
 #endif
-

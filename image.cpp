@@ -1,6 +1,7 @@
 /* SLiM - Simple Login Manager
    Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
    Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
+   Copyright (C) 2012    Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
       
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -644,7 +645,7 @@ Image::createPixmap(Display* dpy, int scr, Window win) {
         }
         break;
     default: {
-            cerr << "Login.app: could not load image" << endl;
+            logStream << "Login.app: could not load image" << endl;
             return(tmp);
         }
     }
