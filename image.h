@@ -63,13 +63,17 @@ public:
 
     Pixmap createPixmap(Display* dpy, int scr, Window win);
 
-
 private:
     int width, height, area;
     unsigned char *rgb_data;
     unsigned char *png_alpha;
 
     int quality_;
+
+    int readJpeg(const char *filename, int *width, int *height,
+        unsigned char **rgb);
+    int readPng(const char *filename, int *width, int *height,
+        unsigned char **rgb, unsigned char **alpha);
 };
 
 #endif

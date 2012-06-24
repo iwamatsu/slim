@@ -24,11 +24,8 @@ using namespace std;
 #include "image.h"
 
 extern "C" {
-    int
-    read_png(const char *filename, int *width, int *height, unsigned char **rgb,
-             unsigned char **alpha);
-    int
-    read_jpeg(const char *filename, int *width, int *height, unsigned char **rgb);
+    #include <jpeglib.h>
+    #include <png.h>
 }
 
 Image::Image() : width(0), height(0), area(0),
@@ -73,10 +70,10 @@ Image::Read(const char *filename) {
     fclose(file);
 
     if ((ubuf[0] == 0x89) && !strncmp("PNG", buf+1, 3)) {
-        success = read_png(filename, &width, &height, &rgb_data, &png_alpha);
+        success = readPng(filename, &width, &height, &rgb_data, &png_alpha);
     }
     else if ((ubuf[0] == 0xff) && (ubuf[1] == 0xd8)){
-        success = read_jpeg(filename, &width, &height, &rgb_data);
+        success = readJpeg(filename, &width, &height, &rgb_data);
     } else {
         fprintf(stderr, "Unknown image format\n");
         success = 0;
@@ -666,3 +663,234 @@ Image::createPixmap(Display* dpy, int scr, Window win) {
     return(tmp);
 }
 
+int
+Image::readJpeg(const char *filename, int *width, int *height,
+                unsigned char **rgb)
+{
+    int ret = 0;
+    struct jpeg_decompress_struct cinfo;
+    struct jpeg_error_mgr jerr;
+    unsigned char *ptr = NULL;
+
+    FILE *infile = fopen(filename, "rb");
+    if (infile == NULL) {
+        logStream << APPNAME << "Cannot fopen file: " << filename << endl;
+        return ret;
+    }
+
+    cinfo.err = jpeg_std_error(&jerr);
+    jpeg_create_decompress(&cinfo);
+    jpeg_stdio_src(&cinfo, infile);
+    jpeg_read_header(&cinfo, TRUE);
+    jpeg_start_decompress(&cinfo);
+
+    /* Prevent against integer overflow */
+    if(cinfo.output_width >= MAX_DIMENSION
+       || cinfo.output_height >= MAX_DIMENSION)
+    {
+        logStream << APPNAME << "Unreasonable dimension found in file: "
+                  << filename << endl;
+        goto close_file;
+    }
+
+    *width = cinfo.output_width;
+    *height = cinfo.output_height;
+
+    rgb[0] = (unsigned char*)
+                malloc(3 * cinfo.output_width * cinfo.output_height);
+    if (rgb[0] == NULL) {
+        logStream << APPNAME << ": Can't allocate memory for JPEG file."
+                  << endl;
+        goto close_file;
+    }
+
+    if (cinfo.output_components == 3) {
+        ptr = rgb[0];
+        while (cinfo.output_scanline < cinfo.output_height) {
+            jpeg_read_scanlines(&cinfo, &ptr, 1);
+            ptr += 3 * cinfo.output_width;
+        }
+    } else if (cinfo.output_components == 1) {
+        ptr = (unsigned char*) malloc(cinfo.output_width);
+        if (ptr == NULL) {
+            logStream << APPNAME << ": Can't allocate memory for JPEG file."
+                      << endl;
+            goto rgb_free;
+        }
+
+        unsigned int ipos = 0;
+        while (cinfo.output_scanline < cinfo.output_height) {
+            jpeg_read_scanlines(&cinfo, &ptr, 1);
+
+            for (unsigned int i = 0; i < cinfo.output_width; i++) {
+                memset(rgb[0] + ipos, ptr[i], 3);
+                ipos += 3;
+            }
+        }
+
+        free(ptr);
+    }
+
+    jpeg_finish_decompress(&cinfo);
+
+    ret = 1;
+    goto close_file;
+
+rgb_free:
+    free(rgb[0]);
+
+close_file:
+    jpeg_destroy_decompress(&cinfo);
+    fclose(infile);
+
+    return(ret);
+}
+
+int
+Image::readPng(const char *filename, int *width, int *height,
+               unsigned char **rgb, unsigned char **alpha)
+{
+    int ret = 0;
+
+    png_structp png_ptr;
+    png_infop info_ptr;
+    png_bytepp row_pointers;
+
+    unsigned char *ptr = NULL;
+    png_uint_32 w, h;
+    int bit_depth, color_type, interlace_type;
+    int i;
+
+    FILE *infile = fopen(filename, "rb");
+    if (infile == NULL) {
+        logStream << APPNAME << "Can not fopen file: " << filename << endl;
+        return ret;
+    }
+
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+                                     (png_voidp) NULL,
+                                     (png_error_ptr) NULL,
+                                     (png_error_ptr) NULL);
+    if (!png_ptr) {
+        goto file_close;
+    }
+
+    info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr) {
+        png_destroy_read_struct(&png_ptr, (png_infopp) NULL,
+                                (png_infopp) NULL);
+    }
+
+    if (setjmp(png_ptr->jmpbuf)) {
+        goto png_destroy;
+    }
+
+    png_init_io(png_ptr, infile);
+    png_read_info(png_ptr, info_ptr);
+
+    png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type,
+                 &interlace_type, (int *) NULL, (int *) NULL);
+
+    /* Prevent against integer overflow */
+    if(w >= MAX_DIMENSION || h >= MAX_DIMENSION) {
+        logStream << APPNAME << "Unreasonable dimension found in file: "
+                  << filename << endl;
+        goto png_destroy;
+    }
+
+    *width = (int) w;
+    *height = (int) h;
+
+    if (color_type == PNG_COLOR_TYPE_RGB_ALPHA
+        || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    {
+        alpha[0] = (unsigned char *) malloc(*width * *height);
+        if (alpha[0] == NULL) {
+            logStream << APPNAME
+                    << ": Can't allocate memory for alpha channel in PNG file."
+                    << endl;
+            goto png_destroy;
+        }
+    }
+
+    /* Change a paletted/grayscale image to RGB */
+    if (color_type == PNG_COLOR_TYPE_PALETTE && bit_depth <= 8)
+    {
+        png_set_expand(png_ptr);
+    }
+
+    /* Change a grayscale image to RGB */
+    if (color_type == PNG_COLOR_TYPE_GRAY
+        || color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    {
+        png_set_gray_to_rgb(png_ptr);
+    }
+
+    /* If the PNG file has 16 bits per channel, strip them down to 8 */
+    if (bit_depth == 16) {
+      png_set_strip_16(png_ptr);
+    }
+
+    /* use 1 byte per pixel */
+    png_set_packing(png_ptr);
+
+    row_pointers = (png_byte **) malloc(*height * sizeof(png_bytep));
+    if (row_pointers == NULL) {
+        logStream << APPNAME << ": Can't allocate memory for PNG file." << endl;
+        goto png_destroy;
+    }
+
+    for (i = 0; i < *height; i++) {
+        row_pointers[i] = (png_byte*) malloc(4 * *width);
+        if (row_pointers == NULL) {
+            logStream << APPNAME << ": Can't allocate memory for PNG file."
+                      << endl;
+            goto rows_free;
+        }
+    }
+
+    png_read_image(png_ptr, row_pointers);
+
+    rgb[0] = (unsigned char *) malloc(3 * (*width) * (*height));
+    if (rgb[0] == NULL) {
+        logStream << APPNAME << ": Can't allocate memory for PNG file." << endl;
+        goto rows_free;
+    }
+
+    if (alpha[0] == NULL) {
+        ptr = rgb[0];
+        for (i = 0; i < *height; i++) {
+            memcpy(ptr, row_pointers[i], 3 * (*width));
+            ptr += 3 * (*width);
+        }
+    } else {
+        ptr = rgb[0];
+        for (i = 0; i < *height; i++) {
+            unsigned int ipos = 0;
+            for (int j = 0; j < *width; j++) {
+                *ptr++ = row_pointers[i][ipos++];
+                *ptr++ = row_pointers[i][ipos++];
+                *ptr++ = row_pointers[i][ipos++];
+                alpha[0][i * (*width) + j] = row_pointers[i][ipos++];
+            }
+        }
+    }
+
+    ret = 1; /* data reading is OK */
+
+rows_free:
+    for (i = 0; i < *height; i++) {
+        if (row_pointers[i] != NULL ) {
+            free(row_pointers[i]);
+        }
+    }
+
+    free(row_pointers);
+
+png_destroy:
+    png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp) NULL);
+
+file_close:
+    fclose(infile);
+    return(ret);
+}
