@@ -74,7 +74,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 find_package(X11 REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(GLUT REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(PNG REQUIRED)
 find_package(ZLIB REQUIRED)
@@ -144,7 +143,7 @@ include_directories(
 	${X11_Xft_INCLUDE_PATH}
 	${X11_Xrender_INCLUDE_PATH}
 	${FREETYPE_INCLUDE_DIR_freetype2}
-	${GLUT_Xmu_INCLUDE_PATH}
+	${X11_Xmu_INCLUDE_PATH}
 	${ZLIB_INCLUDE_DIR}
 	${JPEG_INCLUDE_DIR}
 	${PNG_INCLUDE_DIR}
@@ -158,8 +157,8 @@ target_link_libraries(${PROJECT_NAME}
 	${X11_X11_LIB}
 	${X11_Xft_LIB}
 	${X11_Xrender_LIB}
+	${X11_Xmu_LIB}
 	${FREETYPE_LIBRARY}
-	${GLUT_Xmu_LIBRARY}
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
 	)
