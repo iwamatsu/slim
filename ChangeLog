@@ -1,3 +1,9 @@
+1.3.3 - 2012.06.26
+	* Replaced stderr writes function.
+	* Fix numlock control.
+	* Fix build with GLUT.
+	* Fix PAM authentication.
+
 1.3.3 - 2012.02.22
 	* Change build system to CMake.
 	* Add support ConsoleKit.
