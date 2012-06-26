@@ -43,8 +43,8 @@ int conv(int num_msg, const struct pam_message **msg,
     Panel* panel = *static_cast<Panel**>(appdata_ptr);
     int result = PAM_SUCCESS;
     for (int i=0; i<num_msg; i++){
-        resp[i]->resp=0;
-        resp[i]->resp_retcode=0;
+        (*resp)[i].resp=0;
+        (*resp)[i].resp_retcode=0;
         switch(msg[i]->msg_style){
             case PAM_PROMPT_ECHO_ON:
                 // We assume PAM is asking for the username
@@ -53,13 +53,13 @@ int conv(int num_msg, const struct pam_message **msg,
                     case Panel::Suspend:
                     case Panel::Halt:
                     case Panel::Reboot:
-                        resp[i]->resp=strdup("root");
+                        (*resp)[i].resp=strdup("root");
                         break;
 
                     case Panel::Console:
                     case Panel::Exit:
                     case Panel::Login:
-                        resp[i]->resp=strdup(panel->GetName().c_str());
+                        (*resp)[i].resp=strdup(panel->GetName().c_str());
                         break;
                 }
                 break;
@@ -75,7 +75,7 @@ int conv(int num_msg, const struct pam_message **msg,
 
                     default:
                         panel->EventHandler(Panel::Get_Passwd);
-                        resp[i]->resp=strdup(panel->GetPasswd().c_str());
+                        (*resp)[i].resp=strdup(panel->GetPasswd().c_str());
                         break;
                 }
                 break;
@@ -91,9 +91,9 @@ int conv(int num_msg, const struct pam_message **msg,
     }
     if (result!=PAM_SUCCESS){
         for (int i=0; i<num_msg; i++){
-            if (resp[i]->resp==0) continue;
-            free(resp[i]->resp);
-            resp[i]->resp=0;
+            if ((*resp)[i].resp==0) continue;
+            free((*resp)[i].resp);
+            (*resp)[i].resp=0;
         };
         free(*resp);
         *resp=0;
