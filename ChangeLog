@@ -1,4 +1,4 @@
-1.3.3 - 2012.06.26
+1.3.4 - 2012.06.26
 	* Replaced stderr writes function.
 	* Fix numlock control.
 	* Fix build with GLUT.
