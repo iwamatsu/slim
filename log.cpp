@@ -18,9 +18,6 @@ LogUnit::openLog(const char * filename)
 void
 LogUnit::closeLog()
 {
-	if (logFile.is_open()) {
+	if (logFile.is_open())
 		logFile.close();
-	} else {
-		cerr << APPNAME << ": closing Log file, while is already closed" << endl;
-	}
 }
