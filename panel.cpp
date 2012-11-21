@@ -604,10 +604,10 @@ void Panel::SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
 							int xOffset, int yOffset)
 {
 	if (xOffset && yOffset) {
-		XftDrawString8(d, shadowColor, font, x+xOffset, y+yOffset,
+		XftDrawStringUtf8(d, shadowColor, font, x+xOffset, y+yOffset,
 					   reinterpret_cast<const FcChar8*>(str.c_str()), str.length());
 	}
-	XftDrawString8(d, color, font, x, y, reinterpret_cast<const FcChar8*>(str.c_str()), str.length());
+	XftDrawStringUtf8(d, color, font, x, y, reinterpret_cast<const FcChar8*>(str.c_str()), str.length());
 }
 
 Panel::ActionType Panel::getAction(void) const{
