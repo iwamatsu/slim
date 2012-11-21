@@ -6,14 +6,14 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
 */
-#ifndef __UTIL_H__
-#define __UTIL_H__
+#ifndef _UTIL_H__
+#define _UTIL_H__
 
 #include <string>
 
 namespace Util {
 	bool add_mcookie(const std::string &mcookie, const char *display,
-	    const std::string &xauth_cmd, const std::string &authfile);
+		const std::string &xauth_cmd, const std::string &authfile);
 
 	void srandom(unsigned long seed);
 	long random(void);
@@ -21,4 +21,4 @@ namespace Util {
 	long makeseed(void);
 };
 
-#endif /* __UTIL_H__ */
+#endif /* _UTIL_H__ */

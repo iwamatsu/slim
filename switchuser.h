@@ -8,7 +8,7 @@
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
 */
-    
+	
 #ifndef _SWITCHUSER_H_
 #define _SWITCHUSER_H_
 
@@ -26,22 +26,22 @@
 
 class SwitchUser {
 public:
-    SwitchUser(struct passwd *pw, Cfg *c, const std::string& display,
-               char** _env);
-    ~SwitchUser();
-    void Login(const char* cmd, const char* mcookie);
+	SwitchUser(struct passwd *pw, Cfg *c, const std::string& display,
+			   char** _env);
+	~SwitchUser();
+	void Login(const char* cmd, const char* mcookie);
 
 private:
-    SwitchUser();
-    void SetEnvironment();
-    void SetUserId();
-    void Execute(const char* cmd);
-    void SetClientAuth(const char* mcookie);
-    Cfg* cfg;
-    struct passwd *Pw;
+	SwitchUser();
+	void SetEnvironment();
+	void SetUserId();
+	void Execute(const char* cmd);
+	void SetClientAuth(const char* mcookie);
+	Cfg* cfg;
+	struct passwd *Pw;
 
-    std::string displayName;
-    char** env;
+	std::string displayName;
+	char** env;
 };
 
-#endif
+#endif /* _SWITCHUSER_H_ */

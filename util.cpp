@@ -21,7 +21,7 @@
  * Returns true on success, false on fault.
  */
 bool Util::add_mcookie(const std::string &mcookie, const char *display,
-    const std::string &xauth_cmd, const std::string &authfile)
+	const std::string &xauth_cmd, const std::string &authfile)
 {
 	FILE *fp;
 	std::string cmd = xauth_cmd + " -f " + authfile + " -q";

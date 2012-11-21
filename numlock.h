@@ -30,4 +30,4 @@ private:
     static void control_numlock(Display *dpy, bool flag);
 };
 
-#endif
+#endif /* _NUMLOCK_H_ */

@@ -33,87 +33,85 @@
 
 class App {
 public:
-    App(int argc, char** argv);
-    ~App();
-    void Run();
-    int GetServerPID();
-    void RestartServer();
-    void StopServer();
+	App(int argc, char** argv);
+	~App();
+	void Run();
+	int GetServerPID();
+	void RestartServer();
+	void StopServer();
 
-    // Lock functions
-    void GetLock();
-    void RemoveLock();
+	/* Lock functions */
+	void GetLock();
+	void RemoveLock();
 
-    bool isServerStarted();
+	bool isServerStarted();
 
 private:
-    void Login();
-    void Reboot();
-    void Halt();
-    void Suspend();
-    void Console();
-    void Exit();
-    void KillAllClients(Bool top);
-    void ReadConfig();
-    void OpenLog();
-    void CloseLog();
-    void HideCursor();
-    void CreateServerAuth();
-    char* StrConcat(const char* str1, const char* str2);
-    void UpdatePid();
+	void Login();
+	void Reboot();
+	void Halt();
+	void Suspend();
+	void Console();
+	void Exit();
+	void KillAllClients(Bool top);
+	void ReadConfig();
+	void OpenLog();
+	void CloseLog();
+	void HideCursor();
+	void CreateServerAuth();
+	char* StrConcat(const char* str1, const char* str2);
+	void UpdatePid();
 
-    bool AuthenticateUser(bool focuspass);
+	bool AuthenticateUser(bool focuspass);
  
-    static std::string findValidRandomTheme(const std::string& set);
-    static void replaceVariables(std::string& input,
-                                 const std::string& var,
-                                 const std::string& value);
+	static std::string findValidRandomTheme(const std::string& set);
+	static void replaceVariables(std::string& input,
+								 const std::string& var,
+								 const std::string& value);
 
-    // Server functions
-    int StartServer();
-    int ServerTimeout(int timeout, char *string);
-    int WaitForServer();
+	/* Server functions */
+	int StartServer();
+	int ServerTimeout(int timeout, char *string);
+	int WaitForServer();
 
-    // Private data
-    Window Root;
-    Display* Dpy;
-    int Scr;
-    Panel* LoginPanel;
-    int ServerPID;
-    const char* DisplayName;
-    bool serverStarted;
+	/* Private data */
+	Window Root;
+	Display* Dpy;
+	int Scr;
+	Panel* LoginPanel;
+	int ServerPID;
+	const char* DisplayName;
+	bool serverStarted;
 
 #ifdef USE_PAM
 	PAM::Authenticator pam;
 #endif
 #ifdef USE_CONSOLEKIT
-    Ck::Session ck;
+	Ck::Session ck;
 #endif
 
-    // Options
-    char* DispName;
+	/* Options */
+	char* DispName;
 
-    Cfg *cfg;
+	Cfg *cfg;
 
-    Pixmap BackgroundPixmap;
+	Pixmap BackgroundPixmap;
 
-    void blankScreen();
-    Image* image;
-    void setBackground(const std::string& themedir);
+	void blankScreen();
+	Image* image;
+	void setBackground(const std::string& themedir);
 
-    bool firstlogin;
-    bool daemonmode;
-    bool force_nodaemon;
-	// For testing themes
+	bool firstlogin;
+	bool daemonmode;
+	bool force_nodaemon;
+	/* For testing themes */
 	char* testtheme;
-    bool testing;
-    
-    std::string themeName;
-    std::string mcookie;
+	bool testing;
+	
+	std::string themeName;
+	std::string mcookie;
 
-    const int mcookiesize;
+	const int mcookiesize;
 };
 
-
-#endif
-
+#endif /* _APP_H_ */
