@@ -587,7 +587,7 @@ void App::Login() {
 		n++;
 
 		child_env = static_cast<char**>(malloc(sizeof(char*)*n));
-		memcpy(child_env, old_env, sizeof(char*)*n);
+		memcpy(child_env, old_env, sizeof(char*)*n+1);
 		child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
 		child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
