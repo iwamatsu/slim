@@ -591,8 +591,6 @@ void App::Login() {
 		child_env[n - 1] = StrConcat("XDG_SESSION_COOKIE=", ck.get_xdg_session_cookie());
 		child_env[n] = NULL;
 # endif /* USE_CONSOLEKIT */
-
-		pam.end();
 #else
 
 # ifdef USE_CONSOLEKIT
