@@ -170,5 +170,7 @@ install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
+# systemd service file
+install(FILES slim.service DESTINATION usr/lib/systemd/system)
 # themes directory
 subdirs(themes)
