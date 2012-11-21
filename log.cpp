@@ -5,7 +5,7 @@ bool
 LogUnit::openLog(const char * filename)
 {
 	if (logFile.is_open()) {
-		cerr << APPNAME 
+		cerr << APPNAME
 			<< ": opening a new Log file, while another is already open"
 			<< endl;
 		logFile.close();

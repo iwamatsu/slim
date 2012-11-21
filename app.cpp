@@ -176,7 +176,7 @@ App::App(int argc, char** argv)
 			break;
 		}
 	}
-#ifndef XNEST_DEBUG 
+#ifndef XNEST_DEBUG
 	if (getuid() != 0 && !testing) {
 		logStream << APPNAME << ": only root can run this program" << endl;
 		exit(ERR_EXIT);
@@ -316,7 +316,7 @@ void App::Run() {
 	bool firstloop = true; /* 1st time panel is shown (for automatic username) */
 	bool focuspass = cfg->getOption("focus_password")=="yes";
 	bool autologin = cfg->getOption("auto_login")=="yes";
-	
+
 	if (firstlogin && cfg->getOption("default_user") != "") {
 		LoginPanel->SetName(cfg->getOption("default_user") );
 #ifdef USE_PAM
@@ -335,7 +335,7 @@ void App::Run() {
 	} else if (numlock == "off") {
 		NumLock::setOff(Dpy);
 	}
-	
+
 	/* Start looping */
 	int panelclosed = 1;
 	Panel::ActionType Action;
@@ -369,7 +369,7 @@ void App::Run() {
 			XBell(Dpy, 100);
 			continue;
 		}
-	
+
 		firstloop = false;
 
 		Action = LoginPanel->getAction();
@@ -442,7 +442,7 @@ bool App::AuthenticateUser(bool focuspass){
 		}
 	}
 	LoginPanel->EventHandler(Panel::Get_Passwd);
-	
+
 	char *encrypted, *correct;
 	struct passwd *pw;
 
@@ -463,7 +463,7 @@ bool App::AuthenticateUser(bool focuspass){
 		return false;
 
 #ifdef HAVE_SHADOW
-	struct spwd *sp = getspnam(pw->pw_name);	
+	struct spwd *sp = getspnam(pw->pw_name);
 	endspent();
 	if(sp)
 		correct = sp->sp_pwdp;
@@ -537,7 +537,7 @@ void App::Login() {
 	maildir.append(pw->pw_name);
 	string xauthority = pw->pw_dir;
 	xauthority.append("/.Xauthority");
-	
+
 #ifdef USE_PAM
 	/* Setup the PAM environment */
 	try{
@@ -799,11 +799,11 @@ void App::RestartServer() {
 	};
 #endif
 
-	StopServer(); 
+	StopServer();
 	RemoveLock();
 	while (waitpid(-1, NULL, WNOHANG) > 0); /* Collects all dead childrens */
 	Run();
-} 
+}
 
 void App::KillAllClients(Bool top) {
 	Window dummywindow;
@@ -1077,7 +1077,7 @@ void App::setBackground(const string& themedir) {
 		XSetWindowBackgroundPixmap(Dpy, Root, p);
 	}
 	XClearWindow(Dpy, Root);
-	
+
 	XFlush(Dpy);
 	delete image;
 }
@@ -1137,8 +1137,7 @@ void App::OpenLog() {
 		RemoveLock();
 		exit(ERR_EXIT);
 	}
-	/* I should set the buffers to imediate write, but I just flush on every 
-	   << operation. */ 
+	/* I should set the buffers to imediate write, but I just flush on every << operation. */
 }
 
 /* Relases stdout/err */

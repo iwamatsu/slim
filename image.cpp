@@ -2,12 +2,12 @@
    Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
    Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
    Copyright (C) 2012	Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
-	  
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
-   
+
    The following code has been adapted and extended from
    xplanet 1.0.1, Copyright (C) 2002-04 Hari Nair <hari@alumni.caltech.edu>
 */
@@ -69,7 +69,7 @@ Image::Read(const char *filename) {
 	fread(buf, 1, 4, file);
 	fclose(file);
 
-	if ((ubuf[0] == 0x89) && !strncmp("PNG", buf+1, 3)) 
+	if ((ubuf[0] == 0x89) && !strncmp("PNG", buf+1, 3))
 		success = readPng(filename, &width, &height, &rgb_data, &png_alpha);
 	else if ((ubuf[0] == 0xff) && (ubuf[1] == 0xd8))
 		success = readJpeg(filename, &width, &height, &rgb_data);
@@ -131,7 +131,7 @@ Image::Reduce(const int factor) {
 
 void
 Image::Resize(const int w, const int h) {
-	
+
 	if (width==w && height==h){
 		return;
 	}
@@ -244,7 +244,7 @@ Image::getPixel(double x, double y, unsigned char *pixel, unsigned char *alpha) 
  */
 void Image::Merge(Image* background, const int x, const int y) {
 
-	if (x + width > background->Width()|| y + height > background->Height()) 
+	if (x + width > background->Width()|| y + height > background->Height())
 		return;
 
 	if (background->Width()*background->Height() != width*height)
@@ -254,7 +254,7 @@ void Image::Merge(Image* background, const int x, const int y) {
 	unsigned char *new_rgb = (unsigned char *) malloc(3 * width * height);
 	memset(new_rgb, 0, 3 * width * height);
 	const unsigned char *bg_rgb = background->getRGBData();
-	
+
 	int ipos = 0;
 	if (png_alpha != NULL){
 		for (int j = 0; j < height; j++) {
@@ -305,7 +305,7 @@ void Image::Tile(const int w, const int h) {
 
 	int newwidth = nx*width;
 	int newheight=ny*height;
-		
+
 	unsigned char *new_rgb = (unsigned char *) malloc(3 * newwidth * newheight);
 	memset(new_rgb, 0, 3 * width * height * nx * ny);
 
@@ -390,18 +390,18 @@ void Image::Crop(const int x, const int y, const int w, const int h) {
 void Image::Center(const int w, const int h, const char *hex) {
 
 	unsigned long packed_rgb;
-	sscanf(hex, "%lx", &packed_rgb);  
+	sscanf(hex, "%lx", &packed_rgb);
 
 	unsigned long r = packed_rgb>>16;
 	unsigned long g = packed_rgb>>8 & 0xff;
-	unsigned long b = packed_rgb & 0xff;	
+	unsigned long b = packed_rgb & 0xff;
 
 	unsigned char *new_rgb = (unsigned char *) malloc(3 * w * h);
 	memset(new_rgb, 0, 3 * w * h);
 
 	int x = (w - width) / 2;
 	int y = (h - height) / 2;
-	
+
 	if (x<0) {
 		Crop((width - w)/2,0,w,height);
 		x = 0;
@@ -454,14 +454,14 @@ void Image::Center(const int w, const int h, const char *hex) {
 			}
 		}
 	}
-	
+
 	free(rgb_data);
 	free(png_alpha);
 	rgb_data = new_rgb;
 	png_alpha = NULL;
 	width = w;
 	height = h;
-	
+
 }
 
 /* Fill the image with the given color and adjust its dimensions
@@ -470,11 +470,11 @@ void Image::Center(const int w, const int h, const char *hex) {
 void Image::Plain(const int w, const int h, const char *hex) {
 
 	unsigned long packed_rgb;
-	sscanf(hex, "%lx", &packed_rgb);  
+	sscanf(hex, "%lx", &packed_rgb);
 
 	unsigned long r = packed_rgb>>16;
 	unsigned long g = packed_rgb>>8 & 0xff;
-	unsigned long b = packed_rgb & 0xff;	
+	unsigned long b = packed_rgb & 0xff;
 
 	unsigned char *new_rgb = (unsigned char *) malloc(3 * w * h);
 	memset(new_rgb, 0, 3 * w * h);
@@ -492,7 +492,6 @@ void Image::Plain(const int w, const int h, const char *hex) {
 	png_alpha = NULL;
 	width = w;
 	height = h;
-	
 }
 
 void

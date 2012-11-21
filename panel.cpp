@@ -353,7 +353,7 @@ bool Panel::OnKeyPress(XEvent& event) {
 	int yy;
 	string text;
 	string formerString = "";
-	
+
 	XLookupString(&event.xkey, &ascii, 1, &keysym, &compstatus);
 	switch(keysym){
 		case XK_F1:
@@ -429,7 +429,7 @@ bool Panel::OnKeyPress(XEvent& event) {
 				break;
 			}
 			/* Deliberate fall-through */
-		
+
 		default:
 			if (isprint(ascii) && (keysym < XK_Shift_L || keysym > XK_Hyper_R)){
 				switch(field) {
@@ -575,9 +575,9 @@ void Panel::ShowSession() {
 	XClearWindow(Dpy, Root);
 	string currsession = cfg->getOption("session_msg") + " " + session;
 	XGlyphInfo extents;
-	
+
 	sessionfont = XftFontOpenName(Dpy, Scr, cfg->getOption("session_font").c_str());
-	
+
 	XftDraw *draw = XftDrawCreate(Dpy, Root,
 								  DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
 	XftTextExtents8(Dpy, sessionfont, reinterpret_cast<const XftChar8*>(currsession.c_str()),
@@ -590,7 +590,7 @@ void Panel::ShowSession() {
 	int shadowYOffset = cfg->getIntOption("session_shadow_yoffset");
 
 	SlimDrawString8(draw, &sessioncolor, sessionfont, x, y,
-					currsession, 
+					currsession,
 					&sessionshadowcolor,
 					shadowXOffset, shadowYOffset);
 	XFlush(Dpy);

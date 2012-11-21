@@ -24,7 +24,7 @@ using namespace std;
 
 typedef pair<string,string> option;
 
-Cfg::Cfg() 
+Cfg::Cfg()
 	: currentSession(-1)
 {
 	/* Configuration options */
@@ -110,7 +110,6 @@ Cfg::Cfg()
 	options.insert(option("msg_shadow_xoffset", "0"));
 	options.insert(option("msg_shadow_yoffset", "0"));
 	options.insert(option("msg_shadow_color","#FFFFFF"));
-	
 
 	options.insert(option("session_color","#FFFFFF"));
 	options.insert(option("session_font","Verdana:size=16:bold"));
@@ -285,16 +284,16 @@ void Cfg::fillSessionList(){
 
 				struct stat oFileStat;
 
-				if (stat(strFile.c_str( ), &oFileStat) == 0){
-					if (S_ISREG(oFileStat.st_mode) && 
-						access(strFile.c_str(), R_OK | X_OK) == 0){
+				if (stat(strFile.c_str(), &oFileStat) == 0) {
+					if (S_ISREG(oFileStat.st_mode) &&
+						access(strFile.c_str(), R_OK | X_OK) == 0) {
 						sessions.push_back(string(pDirent->d_name));
 					}
 				}
 			}
 			closedir(pDir);
 		}
-	} 
+	}
 
 	if (sessions.empty()){
 		split(sessions, strSessionList, ',', false);

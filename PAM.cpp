@@ -145,7 +145,7 @@ namespace PAM {
 			case PAM_USER_UNKNOWN:
 				_end();
 				throw Exception(pam_handle, "pam_acct_mgmt()", last_result);
-				
+
 			case PAM_AUTH_ERR:
 			case PAM_PERM_DENIED:
 				throw Auth_Exception(pam_handle, "pam_acct_mgmt()", last_result);

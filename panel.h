@@ -41,34 +41,35 @@ public:
 		Exit,
 		Suspend
 	};
+
 	enum FieldType {
 		Get_Name,
 		Get_Passwd
 	};
 
 
-	Panel(Display* dpy, int scr, Window root, Cfg* config,
+	Panel(Display *dpy, int scr, Window root, Cfg *config,
 		  const std::string& themed);
 	~Panel();
 	void OpenPanel();
 	void ClosePanel();
 	void ClearPanel();
-	void Message(const std::string& text);
-	void Error(const std::string& text);
-	void EventHandler(const FieldType& curfield);
+	void Message(const std::string &text);
+	void Error(const std::string &text);
+	void EventHandler(const FieldType &curfield);
 	std::string getSession();
 	ActionType getAction(void) const;
 
 	void Reset(void);
 	void ResetName(void);
 	void ResetPasswd(void);
-	void SetName(const std::string& name);
+	void SetName(const std::string &name);
 	const std::string& GetName(void) const;
 	const std::string& GetPasswd(void) const;
 private:
 	Panel();
 	void Cursor(int visible);
-	unsigned long GetColor(const char* colorname);
+	unsigned long GetColor(const char *colorname);
 	void OnExpose(void);
 	bool OnKeyPress(XEvent& event);
 	void ShowText();
@@ -76,34 +77,34 @@ private:
 	void ShowSession();
 
 	void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
-							int x, int y, const std::string& str,
-							XftColor* shadowColor,
+							int x, int y, const std::string &str,
+							XftColor *shadowColor,
 							int xOffset, int yOffset);
 
-	Cfg* cfg;
+	Cfg *cfg;
 
 	/* Private data */
 	Window Win;
 	Window Root;
-	Display* Dpy;
+	Display *Dpy;
 	int Scr;
 	int X, Y;
 	GC TextGC;
-	XftFont* font;
+	XftFont *font;
 	XftColor inputshadowcolor;
 	XftColor inputcolor;
 	XftColor msgcolor;
 	XftColor msgshadowcolor;
-	XftFont* msgfont;
+	XftFont *msgfont;
 	XftColor introcolor;
-	XftFont* introfont;
-	XftFont* welcomefont;
+	XftFont *introfont;
+	XftFont *welcomefont;
 	XftColor welcomecolor;
-	XftFont* sessionfont;
+	XftFont *sessionfont;
 	XftColor sessioncolor;
 	XftColor sessionshadowcolor;
 	XftColor welcomeshadowcolor;
-	XftFont* enterfont;
+	XftFont *enterfont;
 	XftColor entercolor;
 	XftColor entershadowcolor;
 	ActionType action;
@@ -142,7 +143,7 @@ private:
 	/* Pixmap data */
 	Pixmap PanelPixmap;
 
-	Image* image;
+	Image *image;
 
 	/* For thesting themes */
 	bool testing;
@@ -150,7 +151,6 @@ private:
 
 	/* Session handling */
 	std::string session;
-
 };
 
 #endif /* _PANEL_H_ */

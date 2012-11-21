@@ -25,7 +25,7 @@
 #include "const.h"
 
 int
-read_png(const char *filename, int *width, int *height, unsigned char **rgb, 
+read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 	 unsigned char **alpha)
 {
 	int ret = 0;
@@ -41,21 +41,22 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 
 	FILE *infile = fopen(filename, "rb");
 	if (infile == NULL) {
-		fprintf(stderr, "Can not fopen file: %s\n",filename);
+		fprintf(stderr, "Can not fopen file: %s\n", filename);
 		return ret;
 	}
 
-	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 
-									 (png_voidp) NULL, 
-									 (png_error_ptr) NULL, 
-									 (png_error_ptr) NULL);
+	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+						(png_voidp)NULL,
+						(png_error_ptr)NULL,
+						(png_error_ptr)NULL);
 	if (!png_ptr)
 		goto file_close;
-  
+
 	info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr) {
-		png_destroy_read_struct(&png_ptr, (png_infopp) NULL, 
-								(png_infopp) NULL);
+		png_destroy_read_struct(&png_ptr,
+						(png_infopp)NULL,
+						(png_infopp)NULL);
 	}
 
 #if PNG_LIBPNG_VER_MAJOR >= 1 && PNG_LIBPNG_VER_MINOR >= 4
@@ -64,7 +65,7 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 	if (setjmp(png_ptr->jmpbuf))
 #endif
 		goto png_destroy;
-  
+
 	png_init_io(png_ptr, infile);
 	png_read_info(png_ptr, info_ptr);
 
@@ -72,31 +73,32 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 				 &interlace_type, (int *) NULL, (int *) NULL);
 
 	/* Prevent against integer overflow */
-	if(w >= MAX_DIMENSION || h >= MAX_DIMENSION) {
-		fprintf(stderr, "Unreasonable dimension found in file: %s\n",filename);
+	if (w >= MAX_DIMENSION || h >= MAX_DIMENSION) {
+		fprintf(stderr,
+			"Unreasonable dimension found in file: %s\n", filename);
 		goto png_destroy;
 	}
 
 	*width = (int) w;
 	*height = (int) h;
-	
+
 	if (color_type == PNG_COLOR_TYPE_RGB_ALPHA
 		|| color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {
 		alpha[0] = malloc(*width * *height);
-		if (alpha[0] == NULL)
-		{
-			fprintf(stderr, "Can't allocate memory for alpha channel in PNG file.\n");
+		if (alpha[0] == NULL) {
+			fprintf(stderr,
+				"Can't allocate memory for alpha channel in PNG file.\n");
 			goto png_destroy;
 		}
 	}
 
 	/* Change a paletted/grayscale image to RGB */
-	if (color_type == PNG_COLOR_TYPE_PALETTE && bit_depth <= 8) 
+	if (color_type == PNG_COLOR_TYPE_PALETTE && bit_depth <= 8)
 		png_set_expand(png_ptr);
 
 	/* Change a grayscale image to RGB */
-	if (color_type == PNG_COLOR_TYPE_GRAY 
-		|| color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+	if (color_type == PNG_COLOR_TYPE_GRAY ||
+		color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
 		png_set_gray_to_rgb(png_ptr);
 
 	/* If the PNG file has 16 bits per channel, strip them down to 8 */
@@ -115,7 +117,8 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 	for (i = 0; i < *height; i++) {
 		row_pointers[i] = malloc(4 * *width);
 		if (row_pointers == NULL) {
-			fprintf(stderr, "Can't allocate memory for PNG line.\n");
+			fprintf(stderr,
+				"Can't allocate memory for PNG line.\n");
 			goto rows_free;
 		}
 	}
@@ -128,8 +131,7 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 		goto rows_free;
 	}
 
-	if (alpha[0] == NULL)
-	{
+	if (alpha[0] == NULL) {
 		ptr = rgb[0];
 		for (i = 0; i < *height; i++) {
 			memcpy(ptr, row_pointers[i], 3 * *width);
@@ -144,7 +146,8 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 				*ptr++ = row_pointers[i][ipos++];
 				*ptr++ = row_pointers[i][ipos++];
 				*ptr++ = row_pointers[i][ipos++];
-				alpha[0][i * *width + j] = row_pointers[i][ipos++];
+				alpha[0][i * *width + j]
+					= row_pointers[i][ipos++];
 			}
 		}
 	}
@@ -153,9 +156,8 @@ read_png(const char *filename, int *width, int *height, unsigned char **rgb,
 
 rows_free:
 	for (i = 0; i < *height; i++) {
-		if (row_pointers[i] != NULL ) {
+		if (row_pointers[i] != NULL)
 			free(row_pointers[i]);
-		}
 	}
 
 	free(row_pointers);
@@ -165,5 +167,5 @@ png_destroy:
 
 file_close:
 	fclose(infile);
-	return(ret);
+	return ret;
 }

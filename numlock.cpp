@@ -28,7 +28,7 @@ int NumLock::xkb_init(Display* dpy) {
 		&& XkbQueryExtension( dpy, &xkb_opcode, &xkb_event, &xkb_error,
 				   &xkb_lmaj, &xkb_lmin );
 }
-	
+
 unsigned int NumLock::xkb_mask_modifier( XkbDescPtr xkb, const char *name ) {
 	int i;
 	if( !xkb || !xkb->names )
@@ -59,7 +59,7 @@ unsigned int NumLock::xkb_numlock_mask(Display* dpy) {
 
 void NumLock::control_numlock(Display *dpy, bool flag) {
 	unsigned int mask;
-	
+
 	if( !xkb_init(dpy) )
 		return;
 
@@ -81,7 +81,7 @@ void NumLock::setOff(Display *dpy) {
 	control_numlock(dpy, false);
 }
 
-/* 
+/*
  Copyright (C) 2000-2001 Lubos Lunak		<l.lunak@kde.org>
  Copyright (C) 2001	  Oswald Buddenhagen <ossi@kde.org>
 
