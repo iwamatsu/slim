@@ -1,6 +1,7 @@
 /* SLiM - Simple Login Manager
    Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
    Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
+   Copyright (C) 2012-13 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -120,7 +121,6 @@ Cfg::Cfg()
 	options.insert(option("session_shadow_color","#FFFFFF"));
 
 	error = "";
-
 }
 
 Cfg::~Cfg() {
@@ -131,31 +131,43 @@ Cfg::~Cfg() {
  * known options from the given configfile / themefile
  */
 bool Cfg::readConf(string configfile) {
-	int n = -1;
-	string line, fn(configfile);
+	int n = -1, pos = 0;
+	string line, next, op, fn(configfile);
 	map<string,string>::iterator it;
-	string op;
-	ifstream cfgfile( fn.c_str() );
-	if (cfgfile) {
-		while (getline( cfgfile, line )) {
-			it = options.begin();
-			while (it != options.end()) {
-				op = it->first;
-				n = line.find(op);
-				if (n == 0)
-					options[op] = parseOption(line, op);
-				it++;
-			}
-		}
-		cfgfile.close();
+	ifstream cfgfile(fn.c_str());
 
-		fillSessionList();
-
-		return true;
-	} else {
+	if (!cfgfile) {
 		error = "Cannot read configuration file: " + configfile;
 		return false;
 	}
+	while (getline(cfgfile, line)) {
+		if ((pos = line.find('\\')) != string::npos) {
+			if (line.length() == pos + 1) {
+				line.replace(pos, 1, " ");
+				next = next + line;
+				continue;
+			} else
+				line.replace(pos, line.length() - pos, " ");
+		}
+
+		if (!next.empty()) {
+			line = next + line;
+			next = ""; 
+		}
+		it = options.begin();
+		while (it != options.end()) {
+			op = it->first;
+			n = line.find(op);
+			if (n == 0)
+				options[op] = parseOption(line, op);
+			it++;
+		}
+	}
+	cfgfile.close();
+
+	fillSessionList();
+
+	return true;
 }
 
 /* Returns the option value, trimmed */
