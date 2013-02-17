@@ -171,6 +171,6 @@ install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file
-install(FILES slim.service DESTINATION /usr/lib/systemd/system)
+install(FILES slim.service DESTINATION ${CMAKE_INSTALL_PREFIX}/systemd/system)
 # themes directory
 subdirs(themes)
