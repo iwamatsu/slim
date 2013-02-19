@@ -16,12 +16,12 @@
 #include <stdint.h>
 #include <cstring>
 #include <cstdio>
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <algorithm>
+
 #include "app.h"
 #include "numlock.h"
 #include "util.h"
@@ -298,6 +298,9 @@ void App::Run() {
 	/* Get screen and root window */
 	Scr = DefaultScreen(Dpy);
 	Root = RootWindow(Dpy, Scr);
+
+	// Intern _XROOTPMAP_ID property
+	BackgroundPixmapId = XInternAtom(Dpy, "_XROOTPMAP_ID", False);
 
 	/* for tests we use a standard window */
 	if (testing) {
@@ -1075,6 +1078,8 @@ void App::setBackground(const string& themedir) {
 		}
 		Pixmap p = image->createPixmap(Dpy, Scr, Root);
 		XSetWindowBackgroundPixmap(Dpy, Root, p);
+		XChangeProperty(Dpy, Root, BackgroundPixmapId, XA_PIXMAP, 32,
+			PropModeReplace, (unsigned char *)&p, 1);
 	}
 	XClearWindow(Dpy, Root);
 

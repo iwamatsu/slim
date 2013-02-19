@@ -13,6 +13,7 @@
 #define _APP_H_
 
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -99,6 +100,7 @@ private:
 
 	void blankScreen();
 	Image *image;
+	Atom BackgroundPixmapId;
 	void setBackground(const std::string &themedir);
 
 	bool firstlogin;
