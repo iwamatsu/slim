@@ -286,6 +286,60 @@ void Image::Merge(Image* background, const int x, const int y) {
 
 }
 
+/* Merge the image with a background, taking care of the
+ * image Alpha transparency. (background alpha is ignored).
+ * The images is merged on position (x, y) on the
+ * background, the background must contain the image.
+ */
+#define IMG_POS_RGB(p, x) (3 * p + x)
+void Image::Merge_non_crop(Image* background, const int x, const int y)
+{
+	int bg_w = background->Width();
+	int bg_h = background->Height();
+
+	if (x + width > bg_w || y + height > bg_h)
+		return;
+
+	double tmp;
+	unsigned char *new_rgb = (unsigned char *)malloc(3 * bg_w * bg_h);
+	memset(new_rgb, 0, 3 * bg_w * bg_h);
+	const unsigned char *bg_rgb = background->getRGBData();
+	int pnl_pos = 0;
+	int bg_pos = 0;
+	int pnl_w_end = x + width;
+	int pnl_h_end = y + height;
+
+	memcpy(new_rgb, bg_rgb, 3 * bg_w * bg_h);
+
+	for (int j = 0; j < bg_h; j++) {
+		for (int i = 0; i < bg_w; i++) {
+			if (j >= y && i >= x && j < pnl_h_end && i < pnl_w_end ) {
+				for (int k = 0; k < 3; k++) {
+					if (png_alpha != NULL)
+						tmp = rgb_data[IMG_POS_RGB(pnl_pos, k)]
+							* png_alpha[pnl_pos]/255.0
+							+ bg_rgb[IMG_POS_RGB(bg_pos, k)]
+							* (1 - png_alpha[pnl_pos]/255.0);
+					else 
+						tmp = rgb_data[IMG_POS_RGB(pnl_pos, k)];
+
+					new_rgb[IMG_POS_RGB(bg_pos, k)] = static_cast<unsigned char>(tmp);
+				}
+				pnl_pos++;
+			}
+			bg_pos++;
+		}
+	}
+
+	width = bg_w;
+	height = bg_h;
+
+	free(rgb_data);
+	free(png_alpha);
+	rgb_data = new_rgb;
+	png_alpha = NULL;
+}
+
 /* Tile the image growing its size to the minimum entire
  * multiple of w * h.
  * The new dimensions should be > of the current ones.
@@ -895,3 +949,4 @@ file_close:
 	fclose(infile);
 	return(ret);
 }
+

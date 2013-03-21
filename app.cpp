@@ -315,7 +315,7 @@ void App::Run() {
 	HideCursor();
 
 	/* Create panel */
-	LoginPanel = new Panel(Dpy, Scr, Root, cfg, themedir);
+	LoginPanel = new Panel(Dpy, Scr, Root, cfg, themedir, Panel::Mode_DM);
 	bool firstloop = true; /* 1st time panel is shown (for automatic username) */
 	bool focuspass = cfg->getOption("focus_password")=="yes";
 	bool autologin = cfg->getOption("auto_login")=="yes";

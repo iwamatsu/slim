@@ -120,6 +120,19 @@ Cfg::Cfg()
 	options.insert(option("session_shadow_yoffset", "0"));
 	options.insert(option("session_shadow_color","#FFFFFF"));
 
+	// slimlock-specific options
+	options.insert(option("dpms_standby_timeout", "60"));
+	options.insert(option("dpms_off_timeout", "600"));
+	options.insert(option("wrong_passwd_timeout", "2"));
+	options.insert(option("passwd_feedback_x", "50%"));
+	options.insert(option("passwd_feedback_y", "10%"));
+	options.insert(option("passwd_feedback_msg", "Authentication failed"));
+	options.insert(option("passwd_feedback_capslock", "Authentication failed (CapsLock is on)"));
+	options.insert(option("show_username", "1"));
+	options.insert(option("show_welcome_msg", "0"));
+	options.insert(option("tty_lock", "1"));
+	options.insert(option("bell", "1"));
+
 	error = "";
 }
 

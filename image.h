@@ -53,6 +53,7 @@ public:
 	void Reduce(const int factor);
 	void Resize(const int w, const int h);
 	void Merge(Image *background, const int x, const int y);
+	void Merge_non_crop(Image* background, const int x, const int y);
 	void Crop(const int x, const int y, const int w, const int h);
 	void Tile(const int w, const int h);
 	void Center(const int w, const int h, const char *hex);

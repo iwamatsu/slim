@@ -60,6 +60,15 @@ set(slim_srcs
 	jpeg.c
 )
 
+set(slimlock_srcs
+	slimlock.cpp
+	cfg.cpp
+	image.cpp
+	panel.cpp
+	util.cpp
+	log.cpp
+)
+
 if(USE_PAM)
 	set(slim_srcs ${slim_srcs} PAM.cpp)
 endif(USE_PAM)
@@ -68,6 +77,7 @@ if(USE_CONSOLEKIT)
 endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
+add_executable(slimlock ${slimlock_srcs})
 
 #Set the custom CMake module directory where our include/lib finders are
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -95,6 +105,7 @@ if(USE_PAM)
 		message("\tPAM Found")
 		set(SLIM_DEFINITIONS ${SLIM_DEFINITIONS} "-DUSE_PAM")
 		target_link_libraries(${PROJECT_NAME} ${PAM_LIBRARY})
+		target_link_libraries(slimlock ${PAM_LIBRARY})
 		include_directories(${PAM_INCLUDE_DIR})
 	else(PAM_FOUND)
 		message("\tPAM Not Found")
@@ -142,6 +153,7 @@ include_directories(
 	${X11_INCLUDE_DIR}
 	${X11_Xft_INCLUDE_PATH}
 	${X11_Xrender_INCLUDE_PATH}
+	${X11_Xrandr_INCLUDE_PATH}
 	${FREETYPE_INCLUDE_DIR_freetype2}
 	${X11_Xmu_INCLUDE_PATH}
 	${ZLIB_INCLUDE_DIR}
@@ -149,7 +161,7 @@ include_directories(
 	${PNG_INCLUDE_DIR}
 )
 
-#Set up library with all found packages
+#Set up library with all found packages for slim
 target_link_libraries(${PROJECT_NAME}
 	${M_LIB}
 	${RT_LIB}
@@ -157,6 +169,22 @@ target_link_libraries(${PROJECT_NAME}
 	${X11_X11_LIB}
 	${X11_Xft_LIB}
 	${X11_Xrender_LIB}
+	${X11_Xrandr_LIB}
+	${X11_Xmu_LIB}
+	${FREETYPE_LIBRARY}
+	${JPEG_LIBRARIES}
+	${PNG_LIBRARIES}
+	)
+
+#Set up library with all found packages for slimlock
+target_link_libraries(slimlock
+	${M_LIB}
+	${RT_LIB}
+	${CRYPTO_LIB}
+	${X11_X11_LIB}
+	${X11_Xft_LIB}
+	${X11_Xrender_LIB}
+	${X11_Xrandr_LIB}
 	${X11_Xmu_LIB}
 	${FREETYPE_LIBRARY}
 	${JPEG_LIBRARIES}

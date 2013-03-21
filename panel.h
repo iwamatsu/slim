@@ -2,6 +2,7 @@
    Copyright (C) 1997, 1998 Per Liden
    Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
    Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
+   Copyright (C) 2013 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,10 +32,26 @@
 #include "log.h"
 #include "image.h"
 
+struct Rectangle {
+	int x;
+	int y;
+	unsigned int width;
+	unsigned int height;
+
+	Rectangle() : x(0), y(0), width(0), height(0) {};
+	Rectangle(int x, int y, unsigned int width,
+					unsigned int height) :
+		x(x), y(y), width(width), height(height) {};
+	bool is_empty() const {
+		return width == 0 || height == 0;
+	}
+};
+
 class Panel {
 public:
 	enum ActionType {
 		Login,
+		Lock,
 		Console,
 		Reboot,
 		Halt,
@@ -47,13 +64,18 @@ public:
 		Get_Passwd
 	};
 
+	enum PanelType {
+		Mode_DM,
+		Mode_Lock
+	};
 
 	Panel(Display *dpy, int scr, Window root, Cfg *config,
-		  const std::string& themed);
+		  const std::string& themed, PanelType panel_mode);
 	~Panel();
 	void OpenPanel();
 	void ClosePanel();
 	void ClearPanel();
+	void WrongPassword(int timeout);
 	void Message(const std::string &text);
 	void Error(const std::string &text);
 	void EventHandler(const FieldType &curfield);
@@ -81,15 +103,19 @@ private:
 							XftColor *shadowColor,
 							int xOffset, int yOffset);
 
-	Cfg *cfg;
+	Rectangle GetPrimaryViewport();
+	void ApplyBackground(Rectangle = Rectangle());
 
 	/* Private data */
+	PanelType mode; /* work mode */
+	Cfg *cfg;
 	Window Win;
 	Window Root;
 	Display *Dpy;
 	int Scr;
 	int X, Y;
 	GC TextGC;
+	GC WinGC;
 	XftFont *font;
 	XftColor inputshadowcolor;
 	XftColor inputcolor;
@@ -109,11 +135,15 @@ private:
 	XftColor entershadowcolor;
 	ActionType action;
 	FieldType field;
+	//Pixmap   background;
 	
 	/* Username/Password */
 	std::string NameBuffer;
 	std::string PasswdBuffer;
 	std::string HiddenPasswdBuffer;
+
+	/* screen stuff */
+	Rectangle viewport;
 
 	/* Configuration */
 	int input_name_x;
