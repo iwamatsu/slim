@@ -372,11 +372,11 @@ unsigned long Panel::GetColor(const char* colorname) {
 }
 
 void Panel::Cursor(int visible) {
-	const char* text;
-	int xx, yy, y2, cheight;
+	const char* text = NULL;
+	int xx = 0, yy = 0, y2 = 0, cheight = 0;
 	const char* txth = "Wj"; /* used to get cursor height */
 
-	if (this->mode == Mode_Lock) {
+	if (mode == Mode_Lock) {
 			text = HiddenPasswdBuffer.c_str();
 			xx = input_pass_x;
 			yy = input_pass_y;
@@ -415,17 +415,14 @@ void Panel::Cursor(int visible) {
 		XDrawLine(Dpy, Win, TextGC,
 				  xx+1, yy-cheight,
 				  xx+1, y2);
-		
 	} else {
-		if (mode == Mode_Lock) {
+		if (mode == Mode_Lock)
 			ApplyBackground(Rectangle(xx+1, yy-cheight,
 				1, y2-(yy-cheight)+1));
-		}
 		else
 			XClearArea(Dpy, Win, xx+1, yy-cheight,
 				1, y2-(yy-cheight)+1, false);
 	}
-
 }
 
 void Panel::EventHandler(const Panel::FieldType& curfield) {
@@ -507,8 +504,8 @@ bool Panel::OnKeyPress(XEvent& event) {
 	char ascii;
 	KeySym keysym;
 	XComposeStatus compstatus;
-	int xx;
-	int yy;
+	int xx = 0;
+	int yy = 0;
 	string text;
 	string formerString = "";
 
@@ -614,9 +611,9 @@ bool Panel::OnKeyPress(XEvent& event) {
 
 	XGlyphInfo extents;
 	XftDraw *draw = XftDrawCreate(Dpy, Win,
-								  DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
+			  DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
 
-   switch(field) {
+	switch(field) {
 		case Get_Name:
 			text = NameBuffer;
 			xx = input_name_x;
@@ -632,10 +629,12 @@ bool Panel::OnKeyPress(XEvent& event) {
 
 	if (!formerString.empty()){
 		const char* txth = "Wj"; /* get proper maximum height ? */
-		XftTextExtents8(Dpy, font, reinterpret_cast<const XftChar8*>(txth), strlen(txth), &extents);
+		XftTextExtents8(Dpy, font,
+				reinterpret_cast<const XftChar8*>(txth), strlen(txth), &extents);
 		int maxHeight = extents.height;
 
-		XftTextExtents8(Dpy, font, reinterpret_cast<const XftChar8*>(formerString.c_str()),
+		XftTextExtents8(Dpy, font,
+				reinterpret_cast<const XftChar8*>(formerString.c_str()),
 						formerString.length(), &extents);
 		int maxLength = extents.width;
 		
@@ -650,9 +649,9 @@ bool Panel::OnKeyPress(XEvent& event) {
 
 	if (!text.empty()) {
 		SlimDrawString8 (draw, &inputcolor, font, xx, yy,
-						 text,
-						 &inputshadowcolor,
-						 inputShadowXOffset, inputShadowYOffset);
+				 text,
+				 &inputshadowcolor,
+				 inputShadowXOffset, inputShadowYOffset);
 	}
 
 	XftDrawDestroy (draw);
@@ -670,7 +669,7 @@ void Panel::ShowText(){
 	input_name_y == input_pass_y;
 
 	XftDraw *draw = XftDrawCreate(Dpy, Win,
-								  DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
+		  DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
 	/* welcome message */
 	XftTextExtents8(Dpy, welcomefont, (XftChar8*)welcome_message.c_str(),
 					strlen(welcome_message.c_str()), &extents);

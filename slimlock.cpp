@@ -367,4 +367,6 @@ void* RaiseWindow(void *data) {
         XRaiseWindow(dpy, win);
         sleep(1);
     }
+
+	return (void *)0;
 }

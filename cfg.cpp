@@ -144,7 +144,8 @@ Cfg::~Cfg() {
  * known options from the given configfile / themefile
  */
 bool Cfg::readConf(string configfile) {
-	int n = -1, pos = 0;
+	int n = -1;
+	unsigned int pos = 0;
 	string line, next, op, fn(configfile);
 	map<string,string>::iterator it;
 	ifstream cfgfile(fn.c_str());
