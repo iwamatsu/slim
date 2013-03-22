@@ -360,7 +360,7 @@ unsigned long Panel::GetColor(const char* colorname) {
 		XGetWindowAttributes(Dpy, Win, &attributes);
 	else
 		XGetWindowAttributes(Dpy, Root, &attributes);
-	
+
 	color.pixel = 0;
 
 	if(!XParseColor(Dpy, attributes.colormap, colorname, &color))
@@ -387,7 +387,7 @@ void Panel::Cursor(int visible) {
 				xx = input_pass_x;
 				yy = input_pass_y;
 				break;
-	
+
 			case Get_Name:
 				text = NameBuffer.c_str();
 				xx = input_name_x;
@@ -463,9 +463,8 @@ void Panel::OnExpose(void) {
 
 	if (mode == Mode_Lock)
 		ApplyBackground();
-	else 
+	else
 		XClearWindow(Dpy, Win);
-	
 
 	if (input_pass_x != input_name_x || input_pass_y != input_name_y){
 		SlimDrawString8 (draw, &inputcolor, font, input_name_x, input_name_y,
@@ -637,7 +636,7 @@ bool Panel::OnKeyPress(XEvent& event) {
 				reinterpret_cast<const XftChar8*>(formerString.c_str()),
 						formerString.length(), &extents);
 		int maxLength = extents.width;
-		
+
 		if (mode == Mode_Lock)
 			ApplyBackground(Rectangle(input_pass_x - 3,
 				input_pass_y - maxHeight - 3,

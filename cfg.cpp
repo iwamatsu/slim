@@ -166,7 +166,7 @@ bool Cfg::readConf(string configfile) {
 
 		if (!next.empty()) {
 			line = next + line;
-			next = ""; 
+			next = "";
 		}
 		it = options.begin();
 		while (it != options.end()) {

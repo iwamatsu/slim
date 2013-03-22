@@ -320,7 +320,7 @@ void Image::Merge_non_crop(Image* background, const int x, const int y)
 							* png_alpha[pnl_pos]/255.0
 							+ bg_rgb[IMG_POS_RGB(bg_pos, k)]
 							* (1 - png_alpha[pnl_pos]/255.0);
-					else 
+					else
 						tmp = rgb_data[IMG_POS_RGB(pnl_pos, k)];
 
 					new_rgb[IMG_POS_RGB(bg_pos, k)] = static_cast<unsigned char>(tmp);

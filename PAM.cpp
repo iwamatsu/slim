@@ -12,8 +12,8 @@
 
 namespace PAM {
 	Exception::Exception(pam_handle_t* _pam_handle,
-			   const std::string& _func_name,
-			   int _errnum):
+					const std::string& _func_name,
+					int _errnum):
 		errnum(_errnum),
 		errstr(pam_strerror(_pam_handle, _errnum)),
 		func_name(_func_name)
@@ -22,13 +22,13 @@ namespace PAM {
 	Exception::~Exception(void){}
 
 	Auth_Exception::Auth_Exception(pam_handle_t* _pam_handle,
-								   const std::string& _func_name,
-								   int _errnum):
+					const std::string& _func_name,
+					int _errnum):
 		Exception(_pam_handle, _func_name, _errnum){}
 
 	Cred_Exception::Cred_Exception(pam_handle_t* _pam_handle,
-								   const std::string& _func_name,
-								   int _errnum):
+					const std::string& _func_name,
+					int _errnum):
 		Exception(_pam_handle, _func_name, _errnum){}
 
 	int Authenticator::_end(void){
@@ -174,8 +174,8 @@ namespace PAM {
 
 		switch((last_result=pam_open_session(pam_handle, 0))){
 			/* The documentation and implementation of Linux PAM differs:
-			   PAM_SESSION_ERROR is described in the documentation but 
-			   don't exists in the actual implementation. This issue needs 
+			   PAM_SESSION_ERROR is described in the documentation but
+			   don't exists in the actual implementation. This issue needs
 			   to be fixes at some point. */
 
 			default:
