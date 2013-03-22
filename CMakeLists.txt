@@ -146,6 +146,7 @@ endif(USE_CONSOLEKIT)
 find_library(M_LIB m)
 find_library(RT_LIB rt)
 find_library(CRYPTO_LIB crypt)
+find_package(Threads)
 
 add_definitions(${SLIM_DEFINITIONS})
 
@@ -190,6 +191,7 @@ target_link_libraries(slimlock
 	${FREETYPE_LIBRARY}
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
+	${CMAKE_THREAD_LIBS_INIT}
 	)
 
 ####### install
