@@ -72,9 +72,9 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
 	XftColorAllocName(Dpy, visual, colormap, cfg->getOption("msg_color").c_str(), &msgcolor);
 	XftColorAllocName(Dpy, visual, colormap, cfg->getOption("msg_shadow_color").c_str(), &msgshadowcolor);
 	XftColorAllocName(Dpy, visual, colormap, cfg->getOption("intro_color").c_str(), &introcolor);
-	XftColorAllocName(Dpy, DefaultVisual(Dpy, Scr), colormap,
+	XftColorAllocName(Dpy, visual, colormap,
 					  cfg->getOption("session_color").c_str(), &sessioncolor);
-	XftColorAllocName(Dpy, DefaultVisual(Dpy, Scr), colormap,
+	XftColorAllocName(Dpy, visual, colormap,
 					  cfg->getOption("session_shadow_color").c_str(), &sessionshadowcolor);
 
 	/* Load properties from config / theme */
@@ -206,12 +206,21 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
 }
 
 Panel::~Panel() {
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &inputcolor);
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &msgcolor);
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &welcomecolor);
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &entercolor);
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &sessioncolor);
-	XftColorFree(Dpy, DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr), &sessionshadowcolor);
+	Visual* visual = DefaultVisual(Dpy, Scr);
+	Colormap colormap = DefaultColormap(Dpy, Scr);
+
+	XftColorFree(Dpy, visual, colormap, &inputcolor);
+	XftColorFree(Dpy, visual, colormap, &inputshadowcolor);
+	XftColorFree(Dpy, visual, colormap, &welcomecolor);
+	XftColorFree(Dpy, visual, colormap, &welcomeshadowcolor);
+	XftColorFree(Dpy, visual, colormap, &entercolor);
+	XftColorFree(Dpy, visual, colormap, &entershadowcolor);
+	XftColorFree(Dpy, visual, colormap, &msgcolor);
+	XftColorFree(Dpy, visual, colormap, &msgshadowcolor);
+	XftColorFree(Dpy, visual, colormap, &introcolor);
+	XftColorFree(Dpy, visual, colormap, &sessioncolor);
+	XftColorFree(Dpy, visual, colormap, &sessionshadowcolor);
+
 	XFreeGC(Dpy, TextGC);
 	XftFontClose(Dpy, font);
 	XftFontClose(Dpy, msgfont);
@@ -277,8 +286,8 @@ void Panel::WrongPassword(int timeout) {
 	message = cfg->getOption("passwd_feedback_msg");
 
 	XftDraw *draw = XftDrawCreate(Dpy, Win,
-	DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
-	XftTextExtents8(Dpy, msgfont, reinterpret_cast<const XftChar8*>(message.c_str()),
+		DefaultVisual(Dpy, Scr), DefaultColormap(Dpy, Scr));
+		XftTextExtents8(Dpy, msgfont, reinterpret_cast<const XftChar8*>(message.c_str()),
 		message.length(), &extents);
 
 	string cfgX = cfg->getOption("passwd_feedback_x");
