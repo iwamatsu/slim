@@ -188,6 +188,7 @@ target_link_libraries(slimlock
 	${X11_Xrender_LIB}
 	${X11_Xrandr_LIB}
 	${X11_Xmu_LIB}
+	${X11_Xext_LIB}
 	${FREETYPE_LIBRARY}
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
