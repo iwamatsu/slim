@@ -364,6 +364,9 @@ void App::Run() {
 			LoginPanel->SetName(cfg->getOption("default_user") );
 		}
 
+        if (firstloop) {
+            LoginPanel->SwitchSession();
+        }
 
 		if (!AuthenticateUser(focuspass && firstloop)){
 			panelclosed = 0;

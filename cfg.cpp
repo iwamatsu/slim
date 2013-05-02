@@ -54,7 +54,6 @@ Cfg::Cfg()
 	options.insert(option("authfile","/var/run/slim.auth"));
 	options.insert(option("shutdown_msg","The system is halting..."));
 	options.insert(option("reboot_msg","The system is rebooting..."));
-	options.insert(option("sessions","wmaker,blackbox,icewm"));
 	options.insert(option("sessiondir",""));
 	options.insert(option("hidecursor","false"));
 
@@ -292,7 +291,6 @@ void Cfg::split(vector<string>& v, const string& str, char c, bool useEmpty) {
 }
 
 void Cfg::fillSessionList(){
-	string strSessionList = getOption("sessions");
 	string strSessionDir  = getOption("sessiondir");
 
 	sessions.clear();
@@ -311,9 +309,29 @@ void Cfg::fillSessionList(){
 				struct stat oFileStat;
 
 				if (stat(strFile.c_str(), &oFileStat) == 0) {
-					if (S_ISREG(oFileStat.st_mode) &&
-						access(strFile.c_str(), R_OK | X_OK) == 0) {
-						sessions.push_back(string(pDirent->d_name));
+                    if (S_ISREG(oFileStat.st_mode) &&
+                            access(strFile.c_str(), R_OK) == 0){
+                        ifstream desktop_file( strFile.c_str() );
+                        if (desktop_file){
+                             string line, session_name = "", session_exec = "";
+                             while (getline( desktop_file, line )) {
+                                 if (line.substr(0, 5) == "Name=") {
+                                     session_name = line.substr(5);
+                                     if (!session_exec.empty())
+                                         break;
+                                 } else
+                                     if (line.substr(0, 5) == "Exec=") {
+                                         session_exec = line.substr(5);
+                                         if (!session_name.empty())
+                                             break;
+                                     }
+                             }
+                             desktop_file.close();
+                             pair<string,string> session(session_name,session_exec);
+                             sessions.push_back(session);
+                             cout << session_exec << " - " << session_name << endl;
+                        }
+
 					}
 				}
 			}
@@ -322,14 +340,12 @@ void Cfg::fillSessionList(){
 	}
 
 	if (sessions.empty()){
-		split(sessions, strSessionList, ',', false);
+        pair<string,string> session("","");
+        sessions.push_back(session);
 	}
 }
 
-string Cfg::nextSession(string current) {
-	if (sessions.size() < 1)
-		return current;
-
+pair<string,string> Cfg::nextSession() {
 	currentSession = (currentSession + 1) % sessions.size();
 	return sessions[currentSession];
 }

@@ -25,7 +25,8 @@ Panel::Panel(Display* dpy, int scr, Window root, Cfg* config,
 	cfg = config;
 	mode = panel_mode;
 
-	session = "";
+	session_name = "";
+    session_exec = "";
 	if (mode == Mode_Lock) {
 		Win = root;
 		viewport = GetPrimaryViewport();
@@ -265,7 +266,8 @@ void Panel::ClosePanel() {
 }
 
 void Panel::ClearPanel() {
-	session = "";
+	session_name = "";
+    session_exec = "";
 	Reset();
 	XClearWindow(Dpy, Root);
 	XClearWindow(Dpy, Win);
@@ -741,22 +743,24 @@ void Panel::ShowText(){
 }
 
 string Panel::getSession() {
-	return session;
+	return session_exec;
 }
 
 /* choose next available session type */
 void Panel::SwitchSession() {
-	session = cfg->nextSession(session);
-	if (session.size() > 0) {
-		ShowSession();
-	}
-}
+        pair<string,string> ses = cfg->nextSession();
+        session_name = ses.first;
+        session_exec = ses.second;
+        if (session_name.size() > 0) {
+                ShowSession();
+        }
+ }
 
 /* Display session type on the screen */
 void Panel::ShowSession() {
 	string msg_x, msg_y;
 	XClearWindow(Dpy, Root);
-	string currsession = cfg->getOption("session_msg") + " " + session;
+	string currsession = cfg->getOption("session_msg") + " " + session_name;
 	XGlyphInfo extents;
 
 	sessionfont = XftFontOpenName(Dpy, Scr, cfg->getOption("session_font").c_str());

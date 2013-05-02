@@ -88,6 +88,7 @@ public:
 	void SetName(const std::string &name);
 	const std::string& GetName(void) const;
 	const std::string& GetPasswd(void) const;
+	void SwitchSession();
 private:
 	Panel();
 	void Cursor(int visible);
@@ -95,7 +96,6 @@ private:
 	void OnExpose(void);
 	bool OnKeyPress(XEvent& event);
 	void ShowText();
-	void SwitchSession();
 	void ShowSession();
 
 	void SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
@@ -180,7 +180,8 @@ private:
 	std::string themedir;
 
 	/* Session handling */
-	std::string session;
+	std::string session_name;
+    std::string session_exec;
 };
 
 #endif /* _PANEL_H_ */
