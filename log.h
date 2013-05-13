@@ -4,7 +4,7 @@
 #ifdef USE_CONSOLEKIT
 #include "Ck.h" 
 #endif
-#ifdef USE_CONSOLEKIT
+#ifdef USE_PAM
 #include "PAM.h"
 #endif
 #include "const.h"
