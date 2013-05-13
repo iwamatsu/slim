@@ -39,7 +39,7 @@ namespace Ck {
 	Session();
 	~Session();
 	};
-};
+}
 
 std::ostream &operator<<(std::ostream &os, const Ck::Exception &e);
 

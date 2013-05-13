@@ -265,7 +265,7 @@ namespace PAM {
 	char** Authenticator::getenvlist(void){
 		return pam_getenvlist(pam_handle);
 	}
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const PAM::Exception& e){
 	os << e.func_name << ": " << e.errstr;

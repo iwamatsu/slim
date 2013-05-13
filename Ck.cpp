@@ -140,7 +140,7 @@ namespace Ck {
   {
 	dbus_error_free(&error);
   }
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const Ck::Exception& e)
 {

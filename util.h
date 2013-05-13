@@ -19,6 +19,6 @@ namespace Util {
 	long random(void);
 
 	long makeseed(void);
-};
+}
 
 #endif /* _UTIL_H__ */

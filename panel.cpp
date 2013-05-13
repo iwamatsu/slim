@@ -814,21 +814,21 @@ void Panel::SlimDrawString8(XftDraw *d, XftColor *color, XftFont *font,
 
 Panel::ActionType Panel::getAction(void) const{
 	return action;
-};
+}
 
 void Panel::Reset(void){
 	ResetName();
 	ResetPasswd();
-};
+}
 
 void Panel::ResetName(void){
 	NameBuffer.clear();
-};
+}
 
 void Panel::ResetPasswd(void){
 	PasswdBuffer.clear();
 	HiddenPasswdBuffer.clear();
-};
+}
 
 void Panel::SetName(const string& name){
 	NameBuffer=name;
@@ -836,15 +836,15 @@ void Panel::SetName(const string& name){
 		action = Login;
 	else
 		action = Lock;
-};
+}
 
 const string& Panel::GetName(void) const{
 	return NameBuffer;
-};
+}
 
 const string& Panel::GetPasswd(void) const{
 	return PasswdBuffer;
-};
+}
 
 Rectangle Panel::GetPrimaryViewport() {
 	Rectangle fallback;

@@ -93,7 +93,7 @@ namespace PAM {
 		Authenticator(const PAM::Authenticator&);
 		Authenticator& operator=(const PAM::Authenticator&);
 	};
-};
+}
 
 std::ostream& operator<<( std::ostream& os, const PAM::Exception& e);
 #endif /* _PAM_H_ */
