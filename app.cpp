@@ -973,7 +973,7 @@ int App::StartServer() {
 		break;
 	}
 
-	delete args;
+	delete [] args;
 
 	serverStarted = true;
 
