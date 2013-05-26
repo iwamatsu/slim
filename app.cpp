@@ -1058,7 +1058,6 @@ void App::setBackground(const string& themedir) {
 	image = new Image;
 	bool loaded = image->Read(filename.c_str());
 	if (!loaded){ /* try jpeg if png failed */
-		filename = "";
 		filename = themedir + "/background.jpg";
 		loaded = image->Read(filename.c_str());
 	}

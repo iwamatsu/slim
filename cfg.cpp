@@ -173,7 +173,7 @@ bool Cfg::readConf(string configfile) {
 			n = line.find(op);
 			if (n == 0)
 				options[op] = parseOption(line, op);
-			it++;
+			++it;
 		}
 	}
 	cfgfile.close();
@@ -221,8 +221,7 @@ string Cfg::Trim( const string& s ) {
 /* Return the welcome message with replaced vars */
 string Cfg::getWelcomeMessage(){
 	string s = getOption("welcome_msg");
-	int n = -1;
-	n = s.find("%host");
+	int n = s.find("%host");
 	if (n >= 0) {
 		string tmp = s.substr(0, n);
 		char host[40];
@@ -258,8 +257,7 @@ int Cfg::getIntOption(std::string option) {
 
 /* Get absolute position */
 int Cfg::absolutepos(const string& position, int max, int width) {
-	int n = -1;
-	n = position.find("%");
+	int n = position.find("%");
 	if (n>0) { /* X Position expressed in percentage */
 		int result = (max*string2int(position.substr(0, n).c_str())/100) - (width / 2);
 		return result < 0 ? 0 : result ;

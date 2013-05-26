@@ -302,7 +302,6 @@ void Image::Merge_non_crop(Image* background, const int x, const int y)
 
 	double tmp;
 	unsigned char *new_rgb = (unsigned char *)malloc(3 * bg_w * bg_h);
-	memset(new_rgb, 0, 3 * bg_w * bg_h);
 	const unsigned char *bg_rgb = background->getRGBData();
 	int pnl_pos = 0;
 	int bg_pos = 0;
