@@ -59,6 +59,8 @@ int conv(int num_msg, const struct pam_message **msg,
 					case Panel::Login:
 						(*resp)[i].resp=strdup(panel->GetName().c_str());
 						break;
+					default:
+						break;
 				}
 				break;
 
@@ -404,6 +406,8 @@ void App::Run() {
 				break;
 			case Panel::Exit:
 				Exit();
+				break;
+			default:
 				break;
 		}
 	}
