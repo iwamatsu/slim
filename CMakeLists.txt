@@ -50,35 +50,40 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 set(slim_srcs
 	main.cpp
 	app.cpp
-	cfg.cpp
-	image.cpp
 	numlock.cpp
-	panel.cpp
 	switchuser.cpp
-	util.cpp
-	log.cpp
 	png.c
 	jpeg.c
 )
 
 set(slimlock_srcs
 	slimlock.cpp
-	cfg.cpp
-	image.cpp
-	panel.cpp
-	util.cpp
-	log.cpp
 )
 
+set(common_srcs
+    cfg.cpp
+    image.cpp
+    log.cpp
+    panel.cpp
+    util.cpp
+)
 if(USE_PAM)
-	set(slim_srcs ${slim_srcs} PAM.cpp)
+	set(common_srcs ${common_srcs} PAM.cpp)
+    # for now, only build slimlock if we are using PAM.
+    set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
+
+add_library(slim_common  STATIC ${common_srcs} )                                                                  
+
+
 if(USE_CONSOLEKIT)
 	set(slim_srcs ${slim_srcs} Ck.cpp)
 endif(USE_CONSOLEKIT)
 
 add_executable(${PROJECT_NAME} ${slim_srcs})
-add_executable(slimlock ${slimlock_srcs})
+if(BUILD_SLIMLOCK)
+    add_executable(slimlock ${slimlock_srcs})
+endif(BUILD_SLIMLOCK)
 
 #Set the custom CMake module directory where our include/lib finders are
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -163,6 +168,11 @@ include_directories(
 	${PNG_INCLUDE_DIR}
 )
 
+target_link_libraries(slim_common
+    ${JPEG_LIBRARIES}
+	${PNG_LIBRARIES}
+)
+
 #Set up library with all found packages for slim
 target_link_libraries(${PROJECT_NAME}
 	${M_LIB}
@@ -176,24 +186,28 @@ target_link_libraries(${PROJECT_NAME}
 	${FREETYPE_LIBRARY}
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
-	)
+    slim_common
+)
 
-#Set up library with all found packages for slimlock
-target_link_libraries(slimlock
-	${M_LIB}
-	${RT_LIB}
-	${CRYPTO_LIB}
-	${X11_X11_LIB}
-	${X11_Xft_LIB}
-	${X11_Xrender_LIB}
-	${X11_Xrandr_LIB}
-	${X11_Xmu_LIB}
-	${X11_Xext_LIB}
-	${FREETYPE_LIBRARY}
-	${JPEG_LIBRARIES}
-	${PNG_LIBRARIES}
-	${CMAKE_THREAD_LIBS_INIT}
-	)
+if(BUILD_SLIMLOCK)
+    #Set up library with all found packages for slimlock
+    target_link_libraries(slimlock
+        ${M_LIB}
+        ${RT_LIB}
+        ${CRYPTO_LIB}
+        ${X11_X11_LIB}
+        ${X11_Xft_LIB}
+        ${X11_Xrender_LIB}
+        ${X11_Xrandr_LIB}
+        ${X11_Xmu_LIB}
+        ${X11_Xext_LIB}
+        ${FREETYPE_LIBRARY}
+        ${JPEG_LIBRARIES}
+        ${PNG_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        slim_common
+    )
+endif(BUILD_SLIMLOCK)
 
 ####### install
 # slim
