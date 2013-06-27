@@ -485,7 +485,7 @@ bool App::AuthenticateUser(bool focuspass){
 		return true;
 
 	encrypted = crypt(LoginPanel->GetPasswd().c_str(), correct);
-	return ((strcmp(encrypted, correct) == 0) ? true : false);
+	return ((encrypted && strcmp(encrypted, correct) == 0) ? true : false);
 }
 #endif
 
