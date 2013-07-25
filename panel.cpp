@@ -855,6 +855,8 @@ Rectangle Panel::GetPrimaryViewport() {
 	XRRScreenResources *resources;
 	XRRCrtcInfo *crtc_info;
 
+    int crtc;
+
 	fallback.x = 0;
 	fallback.y = 0;
 	fallback.width = DisplayWidth(Dpy, Scr);
@@ -874,7 +876,21 @@ Rectangle Panel::GetPrimaryViewport() {
 	    return fallback;
 	}
 
-	crtc_info = XRRGetCrtcInfo(Dpy, resources, primary_info->crtc);
+    // Fixes bug with multiple monitors.  Just pick first monitor if 
+    // XRRGetOutputInfo gives returns bad into for crtc.
+    if (primary_info->crtc < 1) {
+        if (primary_info->ncrtc > 0) {
+           crtc = primary_info->crtcs[0];
+        } else {
+            cerr << "Cannot get crtc from xrandr.\n";
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        crtc = primary_info->crtc;
+    }
+
+	crtc_info = XRRGetCrtcInfo(Dpy, resources, crtc);
+
 	if (!crtc_info) {
 	    XRRFreeOutputInfo(primary_info);
 	    XRRFreeScreenResources(resources);
