@@ -73,8 +73,16 @@ if(USE_PAM)
     set(BUILD_SLIMLOCK 1)
 endif(USE_PAM)
 
-add_library(slim_common  STATIC ${common_srcs} )                                                                  
+# Build common library
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
 
+if (BUILD_SHARED_LIBS)
+	message(STATUS "Enable shared library building")
+	add_library(slim_common ${common_srcs})
+else(BUILD_SHARED_LIBS)
+	message(STATUS "Disable shared library building")
+	add_library(slim_common STATIC ${common_srcs})
+endif(BUILD_SHARED_LIBS)
 
 if(USE_CONSOLEKIT)
 	set(slim_srcs ${slim_srcs} Ck.cpp)
