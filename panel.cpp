@@ -624,6 +624,9 @@ bool Panel::OnKeyPress(XEvent& event) {
 						};
 					break;
 				};
+			}
+			else {
+				return true; //nodraw if notchange
 			};
 			break;
 	};
