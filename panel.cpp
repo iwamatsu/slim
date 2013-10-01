@@ -510,6 +510,25 @@ void Panel::OnExpose(void) {
 	ShowText();
 }
 
+void Panel::EraseLastChar(string &formerString) {
+	switch(field) {
+	case GET_NAME:
+		if (! NameBuffer.empty()) {
+			formerString=NameBuffer;
+			NameBuffer.erase(--NameBuffer.end());
+		}
+		break;
+
+	case GET_PASSWD:
+		if (!PasswdBuffer.empty()) {
+			formerString=HiddenPasswdBuffer;
+			PasswdBuffer.erase(--PasswdBuffer.end());
+			HiddenPasswdBuffer.erase(--HiddenPasswdBuffer.end());
+		}
+		break;
+	}
+}
+
 bool Panel::OnKeyPress(XEvent& event) {
 	char ascii;
 	KeySym keysym;
@@ -562,21 +581,7 @@ bool Panel::OnKeyPress(XEvent& event) {
 	switch(keysym){
 		case XK_Delete:
 		case XK_BackSpace:
-			switch(field) {
-				case GET_NAME:
-					if (! NameBuffer.empty()){
-						formerString=NameBuffer;
-						NameBuffer.erase(--NameBuffer.end());
-					};
-					break;
-				case GET_PASSWD:
-					if (! PasswdBuffer.empty()){
-						formerString=HiddenPasswdBuffer;
-						PasswdBuffer.erase(--PasswdBuffer.end());
-						HiddenPasswdBuffer.erase(--HiddenPasswdBuffer.end());
-					};
-					break;
-			};
+			EraseLastChar(formerString);
 			break;
 
 		case XK_w:
@@ -588,12 +593,16 @@ bool Panel::OnKeyPress(XEvent& event) {
 						HiddenPasswdBuffer.clear();
 						PasswdBuffer.clear();
 						break;
-
 					case Get_Name:
 						formerString = NameBuffer;
 						NameBuffer.clear();
 						break;
-				};
+				}
+				break;
+			}
+		case XK_h:
+			if (reinterpret_cast<XKeyEvent&>(event).state & ControlMask) {
+				EraseLastChar(formerString);
 				break;
 			}
 			/* Deliberate fall-through */
