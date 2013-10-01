@@ -219,7 +219,11 @@ endif(BUILD_SLIMLOCK)
 
 ####### install
 # slim
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin )
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+if (BUILD_SHARED_LIBS)
+	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib)
+endif (BUILD_SHARED_LIBS)
+
 # man file
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
 # configure
