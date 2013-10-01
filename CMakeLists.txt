@@ -240,6 +240,8 @@ install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file
-install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 # themes directory
 subdirs(themes)
