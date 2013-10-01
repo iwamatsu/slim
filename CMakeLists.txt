@@ -78,10 +78,10 @@ set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
 
 if (BUILD_SHARED_LIBS)
 	message(STATUS "Enable shared library building")
-	add_library(slim_common ${common_srcs})
+	add_library(libslim ${common_srcs})
 else(BUILD_SHARED_LIBS)
 	message(STATUS "Disable shared library building")
-	add_library(slim_common STATIC ${common_srcs})
+	add_library(libslim STATIC ${common_srcs})
 endif(BUILD_SHARED_LIBS)
 
 if(USE_CONSOLEKIT)
@@ -176,7 +176,7 @@ include_directories(
 	${PNG_INCLUDE_DIR}
 )
 
-target_link_libraries(slim_common
+target_link_libraries(libslim
     ${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
 )
@@ -194,7 +194,7 @@ target_link_libraries(${PROJECT_NAME}
 	${FREETYPE_LIBRARY}
 	${JPEG_LIBRARIES}
 	${PNG_LIBRARIES}
-    slim_common
+    libslim
 )
 
 if(BUILD_SLIMLOCK)
@@ -213,7 +213,7 @@ if(BUILD_SLIMLOCK)
         ${JPEG_LIBRARIES}
         ${PNG_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
-        slim_common
+        libslim
     )
 endif(BUILD_SLIMLOCK)
 
@@ -223,7 +223,11 @@ install(TARGETS slim RUNTIME DESTINATION bin)
 install(TARGETS slimlock RUNTIME DESTINATION bin)
 
 if (BUILD_SHARED_LIBS)
-	install(TARGETS slim_common
+	set_target_properties(libslim PROPERTIES
+		OUTPUT_NAME slim
+		SOVERSION ${SLIM_VERSION})
+
+	install(TARGETS libslim
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
 	)
