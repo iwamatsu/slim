@@ -24,6 +24,7 @@ set(SLIM_VERSION "${SLIM_VERSION_MAJOR}.${SLIM_VERSION_MINOR}.${SLIM_VERSION_PAT
 set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation Directory")
 set(PKGDATADIR "${CMAKE_INSTALL_PREFIX}/share/slim")
 set(SYSCONFDIR "/etc")
+set(LIBDIR "/lib")
 set(MANDIR "${CMAKE_INSTALL_PREFIX}/share/man")
 
 set(SLIM_DEFINITIONS)
@@ -239,6 +240,6 @@ install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file
-install(FILES slim.service DESTINATION ${CMAKE_INSTALL_PREFIX}/systemd/system)
+install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
 # themes directory
 subdirs(themes)
