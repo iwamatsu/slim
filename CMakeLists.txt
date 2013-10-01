@@ -219,9 +219,14 @@ endif(BUILD_SLIMLOCK)
 
 ####### install
 # slim
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+install(TARGETS slim RUNTIME DESTINATION bin)
+install(TARGETS slimlock RUNTIME DESTINATION bin)
+
 if (BUILD_SHARED_LIBS)
-	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION lib)
+	install(TARGETS slim_common
+		LIBRARY DESTINATION lib
+		ARCHIVE DESTINATION lib
+	)
 endif (BUILD_SHARED_LIBS)
 
 # man file
