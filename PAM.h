@@ -17,7 +17,7 @@
 #endif
 
 namespace PAM {
-	class Exception{
+	class Exception {
 	public:
 		int errnum;
 		std::string errstr;
@@ -28,14 +28,14 @@ namespace PAM {
 		virtual ~Exception(void);
 	};
 
-	class Auth_Exception: public Exception{
+	class Auth_Exception: public Exception {
 	public:
 		Auth_Exception(pam_handle_t* _pam_handle,
 					   const std::string& _func_name,
 					   int _errnum);
 	};
 
-	class Cred_Exception: public Exception{
+	class Cred_Exception: public Exception {
 	public:
 		Cred_Exception(pam_handle_t* _pam_handle,
 					   const std::string& _func_name,
@@ -43,7 +43,7 @@ namespace PAM {
 	};
 
 
-	class Authenticator{
+	class Authenticator {
 	private:
 		struct pam_conv pam_conversation;
 		pam_handle_t* pam_handle;
@@ -57,11 +57,11 @@ namespace PAM {
 						   void *appdata_ptr);
 
 		enum ItemType {
-			Service	 = PAM_SERVICE,
+			Service		= PAM_SERVICE,
 			User		= PAM_USER,
-			User_Prompt = PAM_USER_PROMPT,
-			TTY		 = PAM_TTY,
-			Requestor   = PAM_RUSER,
+			User_Prompt	= PAM_USER_PROMPT,
+			TTY			= PAM_TTY,
+			Requestor	= PAM_RUSER,
 			Host		= PAM_RHOST,
 			Conv		= PAM_CONV,
 #ifdef __LIBPAM_VERSION

@@ -307,28 +307,28 @@ void Cfg::fillSessionList(){
 				struct stat oFileStat;
 
 				if (stat(strFile.c_str(), &oFileStat) == 0) {
-                    if (S_ISREG(oFileStat.st_mode) &&
-                            access(strFile.c_str(), R_OK) == 0){
-                        ifstream desktop_file( strFile.c_str() );
-                        if (desktop_file){
-                             string line, session_name = "", session_exec = "";
-                             while (getline( desktop_file, line )) {
-                                 if (line.substr(0, 5) == "Name=") {
-                                     session_name = line.substr(5);
-                                     if (!session_exec.empty())
-                                         break;
-                                 } else
-                                     if (line.substr(0, 5) == "Exec=") {
-                                         session_exec = line.substr(5);
-                                         if (!session_name.empty())
-                                             break;
-                                     }
-                             }
-                             desktop_file.close();
-                             pair<string,string> session(session_name,session_exec);
-                             sessions.push_back(session);
-                             cout << session_exec << " - " << session_name << endl;
-                        }
+					if (S_ISREG(oFileStat.st_mode) &&
+							access(strFile.c_str(), R_OK) == 0){
+						ifstream desktop_file(strFile.c_str());
+						if (desktop_file){
+							 string line, session_name = "", session_exec = "";
+							 while (getline( desktop_file, line )) {
+								 if (line.substr(0, 5) == "Name=") {
+									 session_name = line.substr(5);
+									 if (!session_exec.empty())
+										 break;
+								 } else
+									 if (line.substr(0, 5) == "Exec=") {
+										 session_exec = line.substr(5);
+										 if (!session_name.empty())
+											 break;
+									 }
+							 }
+							 desktop_file.close();
+							 pair<string,string> session(session_name,session_exec);
+							 sessions.push_back(session);
+							 cout << session_exec << " - " << session_name << endl;
+						}
 
 					}
 				}
@@ -338,8 +338,8 @@ void Cfg::fillSessionList(){
 	}
 
 	if (sessions.empty()){
-        pair<string,string> session("","");
-        sessions.push_back(session);
+		pair<string,string> session("","");
+		sessions.push_back(session);
 	}
 }
 

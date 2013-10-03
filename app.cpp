@@ -1,13 +1,13 @@
 /* SLiM - Simple Login Manager
-   Copyright (C) 1997, 1998 Per Liden
-   Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
-   Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-*/
+ *  Copyright (C) 1997, 1998 Per Liden
+ *  Copyright (C) 2004-06 Simone Rota <sip@varlock.com>
+ *  Copyright (C) 2004-06 Johannes Winkelmann <jw@tks6.net>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ */
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,18 +36,21 @@ using namespace std;
 #include <string>
 
 int conv(int num_msg, const struct pam_message **msg,
-		 struct pam_response **resp, void *appdata_ptr){
+		 struct pam_response **resp, void *appdata_ptr)
+{
 	*resp = (struct pam_response *) calloc(num_msg, sizeof(struct pam_response));
 	Panel* panel = *static_cast<Panel**>(appdata_ptr);
 	int result = PAM_SUCCESS;
-	for (int i=0; i<num_msg; i++){
-		(*resp)[i].resp=0;
-		(*resp)[i].resp_retcode=0;
-		switch(msg[i]->msg_style){
+	int i;
+
+	for (i = 0; i < num_msg; i++) {
+		(*resp)[i].resp = 0;
+		(*resp)[i].resp_retcodei = 0;
+		switch (msg[i]->msg_style) {
 			case PAM_PROMPT_ECHO_ON:
 				/* We assume PAM is asking for the username */
 				panel->EventHandler(Panel::Get_Name);
-				switch(panel->getAction()){
+				switch (panel->getAction()) {
 					case Panel::Suspend:
 					case Panel::Halt:
 					case Panel::Reboot:
@@ -66,11 +69,11 @@ int conv(int num_msg, const struct pam_message **msg,
 
 			case PAM_PROMPT_ECHO_OFF:
 				/* We assume PAM is asking for the password */
-				switch(panel->getAction()){
+				switch (panel->getAction()) {
 					case Panel::Console:
 					case Panel::Exit:
 						/* We should leave now! */
-						result=PAM_CONV_ERR;
+						result = PAM_CONV_ERR;
 						break;
 
 					default:
@@ -89,27 +92,32 @@ int conv(int num_msg, const struct pam_message **msg,
 		}
 		if (result!=PAM_SUCCESS) break;
 	}
-	if (result!=PAM_SUCCESS){
-		for (int i=0; i<num_msg; i++){
-			if ((*resp)[i].resp==0) continue;
+
+	if (result != PAM_SUCCESS) {
+		for (i = 0; i < num_msg; i++) {
+			if ((*resp)[i].resp == 0)
+				continue;
 			free((*resp)[i].resp);
-			(*resp)[i].resp=0;
-		};
+			(*resp)[i].resp = 0;
+		}
 		free(*resp);
-		*resp=0;
-	};
+		*resp = 0;
+	}
+
 	return result;
 }
 #endif
 
 extern App* LoginApp;
 
-int xioerror(Display *disp) {
+int xioerror(Display *disp)
+{
 	LoginApp->RestartServer();
 	return 0;
 }
 
-void CatchSignal(int sig) {
+void CatchSignal(int sig)
+{
 	logStream << APPNAME << ": unexpected signal " << sig << endl;
 
 	if (LoginApp->isServerStarted())
@@ -119,7 +127,8 @@ void CatchSignal(int sig) {
 	exit(ERR_EXIT);
 }
 
-void User1Signal(int sig) {
+void User1Signal(int sig)
+{
 	signal(sig, User1Signal);
 }
 
@@ -144,7 +153,7 @@ App::App(int argc, char** argv)
 
 	/* Parse command line
 	   Note: we force a option for nodaemon switch to handle "-nodaemon" */
-	while((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
+	while ((tmp = getopt(argc, argv, "vhp:n:d?")) != EOF) {
 		switch (tmp) {
 		case 'p':	/* Test theme */
 			testtheme = optarg;
@@ -187,7 +196,8 @@ App::App(int argc, char** argv)
 
 }
 
-void App::Run() {
+void App::Run()
+{
 	DisplayName = DISPLAY;
 
 #ifdef XNEST_DEBUG
@@ -221,20 +231,19 @@ void App::Run() {
 	}
 
 #ifdef USE_PAM
-	try{
+	try {
 		pam.start("slim");
 		pam.set_item(PAM::Authenticator::TTY, DisplayName);
 		pam.set_item(PAM::Authenticator::Requestor, "root");
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
 		exit(ERR_EXIT);
-	};
+	}
 #endif
 
 	bool loaded = false;
 	while (!loaded) {
-		themedir =  themebase + themeName;
+		themedir = themebase + themeName;
 		themefile = themedir + THEMESFILE;
 		if (!cfg->readConf(themefile)) {
 			if (themeName == "default") {
@@ -290,7 +299,7 @@ void App::Run() {
 	}
 
 	/* Open display */
-	if((Dpy = XOpenDisplay(DisplayName)) == 0) {
+	if ((Dpy = XOpenDisplay(DisplayName)) == 0) {
 		logStream << APPNAME << ": could not open display '"
 			 << DisplayName << "'" << endl;
 		if (!testing) StopServer();
@@ -323,9 +332,9 @@ void App::Run() {
 	bool autologin = cfg->getOption("auto_login")=="yes";
 
 	if (firstlogin && cfg->getOption("default_user") != "") {
-		LoginPanel->SetName(cfg->getOption("default_user") );
+		LoginPanel->SetName(cfg->getOption("default_user"));
 #ifdef USE_PAM
-	pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
+		pam.set_item(PAM::Authenticator::User, cfg->getOption("default_user").c_str());
 #endif
 		firstlogin = false;
 		if (autologin) {
@@ -345,8 +354,8 @@ void App::Run() {
 	int panelclosed = 1;
 	Panel::ActionType Action;
 
-	while(1) {
-		if(panelclosed) {
+	while (1) {
+		if (panelclosed) {
 			/* Init root */
 			setBackground(themedir);
 
@@ -362,15 +371,13 @@ void App::Run() {
 
 		LoginPanel->Reset();
 
-		if (firstloop && cfg->getOption("default_user") != "") {
-			LoginPanel->SetName(cfg->getOption("default_user") );
-		}
+		if (firstloop && cfg->getOption("default_user") != "")
+			LoginPanel->SetName(cfg->getOption("default_user"));
 
-        if (firstloop) {
+        if (firstloop)
             LoginPanel->SwitchSession();
-        }
 
-		if (!AuthenticateUser(focuspass && firstloop)){
+		if (!AuthenticateUser(focuspass && firstloop)) {
 			panelclosed = 0;
 			firstloop = false;
 			LoginPanel->ClearPanel();
@@ -382,13 +389,13 @@ void App::Run() {
 
 		Action = LoginPanel->getAction();
 		/* for themes test we just quit */
-		if (testing) {
+		if (testing)
 			Action = Panel::Exit;
-		}
+
 		panelclosed = 1;
 		LoginPanel->ClosePanel();
 
-		switch(Action) {
+		switch (Action) {
 			case Panel::Login:
 				Login();
 				break;
@@ -414,38 +421,39 @@ void App::Run() {
 }
 
 #ifdef USE_PAM
-bool App::AuthenticateUser(bool focuspass){
+bool App::AuthenticateUser(bool focuspass)
+{
 	/* Reset the username */
 	try{
 		if (!focuspass)
 			pam.set_item(PAM::Authenticator::User, 0);
 		pam.authenticate();
-	}
-	catch(PAM::Auth_Exception& e){
-		switch(LoginPanel->getAction()){
+	} catch(PAM::Auth_Exception& e) {
+		switch (LoginPanel->getAction()) {
 			case Panel::Exit:
 			case Panel::Console:
 				return true; /* <--- This is simply fake! */
 			default:
 				break;
-		};
+		}
 		logStream << APPNAME << ": " << e << endl;
 		return false;
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
 		exit(ERR_EXIT);
-	};
+	}
 	return true;
 }
 #else
-bool App::AuthenticateUser(bool focuspass){
-	if (!focuspass){
+bool App::AuthenticateUser(bool focuspass)
+{
+	if (!focuspass) {
 		LoginPanel->EventHandler(Panel::Get_Name);
-		switch(LoginPanel->getAction()){
+		switch (LoginPanel->getAction()) {
 			case Panel::Exit:
 			case Panel::Console:
-				logStream << APPNAME << ": Got a special command (" << LoginPanel->GetName() << ")" << endl;
+				logStream << APPNAME << ": Got a special command ("
+						<< LoginPanel->GetName() << ")" << endl;
 				return true; /* <--- This is simply fake! */
 			default:
 				break;
@@ -456,7 +464,7 @@ bool App::AuthenticateUser(bool focuspass){
 	char *encrypted, *correct;
 	struct passwd *pw;
 
-	switch(LoginPanel->getAction()){
+	switch (LoginPanel->getAction()) {
 		case Panel::Suspend:
 		case Panel::Halt:
 		case Panel::Reboot:
@@ -469,19 +477,19 @@ bool App::AuthenticateUser(bool focuspass){
 			break;
 	}
 	endpwent();
-	if(pw == 0)
+	if (pw == 0)
 		return false;
 
 #ifdef HAVE_SHADOW
 	struct spwd *sp = getspnam(pw->pw_name);
 	endspent();
-	if(sp)
+	if (sp)
 		correct = sp->sp_pwdp;
 	else
 #endif		/* HAVE_SHADOW */
 		correct = pw->pw_passwd;
 
-	if(correct == 0 || correct[0] == '\0')
+	if (correct == 0 || correct[0] == '\0')
 		return true;
 
 	encrypted = crypt(LoginPanel->GetPasswd().c_str(), correct);
@@ -489,12 +497,14 @@ bool App::AuthenticateUser(bool focuspass){
 }
 #endif
 
-int App::GetServerPID() {
+int App::GetServerPID()
+{
 	return ServerPID;
 }
 
 /* Hide the cursor */
-void App::HideCursor() {
+void App::HideCursor()
+{
 	if (cfg->getOption("hidecursor") == "true") {
 		XColor			black;
 		char			cursordata[1];
@@ -510,7 +520,8 @@ void App::HideCursor() {
 	}
 }
 
-void App::Login() {
+void App::Login()
+{
 	struct passwd *pw;
 	pid_t pid;
 
@@ -518,21 +529,19 @@ void App::Login() {
 	try{
 		pam.open_session();
 		pw = getpwnam(static_cast<const char*>(pam.get_item(PAM::Authenticator::User)));
-	}
-	catch(PAM::Cred_Exception& e){
+	} catch(PAM::Cred_Exception& e) {
 		/* Credentials couldn't be established */
 		logStream << APPNAME << ": " << e << endl;
 		return;
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
 		exit(ERR_EXIT);
-	};
+	}
 #else
 	pw = getpwnam(LoginPanel->GetName().c_str());
 #endif
 	endpwent();
-	if(pw == 0)
+	if (pw == 0)
 		return;
 	if (pw->pw_shell[0] == '\0') {
 		setusershell();
@@ -551,7 +560,7 @@ void App::Login() {
 #ifdef USE_PAM
 	/* Setup the PAM environment */
 	try{
-		if(term) pam.setenv("TERM", term);
+		if (term) pam.setenv("TERM", term);
 		pam.setenv("HOME", pw->pw_dir);
 		pam.setenv("PWD", pw->pw_dir);
 		pam.setenv("SHELL", pw->pw_shell);
@@ -561,8 +570,7 @@ void App::Login() {
 		pam.setenv("DISPLAY", DisplayName);
 		pam.setenv("MAIL", maildir.c_str());
 		pam.setenv("XAUTHORITY", xauthority.c_str());
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
 		exit(ERR_EXIT);
 	}
@@ -581,7 +589,7 @@ void App::Login() {
 
 	/* Create new process */
 	pid = fork();
-	if(pid == 0) {
+	if (pid == 0) {
 #ifdef USE_PAM
 		/* Get a copy of the environment and close the child's copy */
 		/* of the PAM-handle. */
@@ -592,7 +600,7 @@ void App::Login() {
 
 		/* Grow the copy of the environment for the session cookie */
 		int n;
-		for(n = 0; child_env[n] != NULL ; n++);
+		for (n = 0; child_env[n] != NULL ; n++);
 
 		n++;
 
@@ -610,7 +618,7 @@ void App::Login() {
 # endif /* USE_CONSOLEKIT */
 		char** child_env = static_cast<char**>(malloc(sizeof(char*)*Num_Of_Variables));
 		int n = 0;
-		if(term) child_env[n++]=StrConcat("TERM=", term);
+		if (term) child_env[n++]=StrConcat("TERM=", term);
 		child_env[n++]=StrConcat("HOME=", pw->pw_dir);
 		child_env[n++]=StrConcat("PWD=", pw->pw_dir);
 		child_env[n++]=StrConcat("SHELL=", pw->pw_shell);
@@ -668,19 +676,17 @@ void App::Login() {
 #ifdef USE_CONSOLEKIT
 	try {
 		ck.close_session();
-	}
-	catch(Ck::Exception &e) {
+	} catch(Ck::Exception &e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 #ifdef USE_PAM
-	try{
+	try {
 		pam.close_session();
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 /* Close all clients */
@@ -691,7 +697,7 @@ void App::Login() {
 	killpg(pid, SIGHUP);
 
 	/* Send TERM signal to clientgroup, if error send KILL */
-	if(killpg(pid, SIGTERM))
+	if (killpg(pid, SIGTERM))
 	killpg(pid, SIGKILL);
 
 	HideCursor();
@@ -704,14 +710,14 @@ void App::Login() {
 
 }
 
-void App::Reboot() {
+void App::Reboot()
+{
 #ifdef USE_PAM
-	try{
+	try {
 		pam.end();
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 	/* Write message */
@@ -726,14 +732,14 @@ void App::Reboot() {
 }
 
 
-void App::Halt() {
+void App::Halt()
+{
 #ifdef USE_PAM
-	try{
+	try {
 		pam.end();
-	}
-	catch(PAM::Exception& e){
+	} catch (PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 	/* Write message */
@@ -747,13 +753,15 @@ void App::Halt() {
 	exit(OK_EXIT);
 }
 
-void App::Suspend() {
+void App::Suspend()
+{
 	sleep(1);
 	system(cfg->getOption("suspend_cmd").c_str());
 }
 
 
-void App::Console() {
+void App::Console()
+{
 	int posx = 40;
 	int posy = 40;
 	int fontx = 9;
@@ -769,15 +777,14 @@ void App::Console() {
 	delete [] tmp;
 }
 
-
-void App::Exit() {
+void App::Exit()
+{
 #ifdef USE_PAM
-	try{
+	try {
 		pam.end();
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 	if (testing) {
@@ -795,18 +802,19 @@ void App::Exit() {
 	exit(OK_EXIT);
 }
 
-int CatchErrors(Display *dpy, XErrorEvent *ev) {
+int CatchErrors(Display *dpy, XErrorEvent *ev)
+{
 	return 0;
 }
 
-void App::RestartServer() {
+void App::RestartServer()
+{
 #ifdef USE_PAM
-	try{
+	try {
 		pam.end();
-	}
-	catch(PAM::Exception& e){
+	} catch(PAM::Exception& e) {
 		logStream << APPNAME << ": " << e << endl;
-	};
+	}
 #endif
 
 	StopServer();
@@ -815,7 +823,8 @@ void App::RestartServer() {
 	Run();
 }
 
-void App::KillAllClients(Bool top) {
+void App::KillAllClients(Bool top)
+{
 	Window dummywindow;
 	Window *children;
 	unsigned int nchildren;
@@ -827,17 +836,17 @@ void App::KillAllClients(Bool top) {
 
 	nchildren = 0;
 	XQueryTree(Dpy, Root, &dummywindow, &dummywindow, &children, &nchildren);
-	if(!top) {
-		for(i=0; i<nchildren; i++) {
-			if(XGetWindowAttributes(Dpy, children[i], &attr) && (attr.map_state == IsViewable))
+	if (!top) {
+		for (i=0; i<nchildren; i++) {
+			if (XGetWindowAttributes(Dpy, children[i], &attr) && (attr.map_state == IsViewable))
 				children[i] = XmuClientWindow(Dpy, children[i]);
 			else
 				children[i] = 0;
 		}
 	}
 
-	for(i=0; i<nchildren; i++) {
-		if(children[i])
+	for (i=0; i<nchildren; i++) {
+		if (children[i])
 			XKillClient(Dpy, children[i]);
 	}
 	XFree((char *)children);
@@ -846,29 +855,29 @@ void App::KillAllClients(Bool top) {
 	XSetErrorHandler(NULL);
 }
 
-
-int App::ServerTimeout(int timeout, char* text) {
+int App::ServerTimeout(int timeout, char* text)
+{
 	int	i = 0;
 	int pidfound = -1;
 	static char	*lasttext;
 
-	for(;;) {
+	while (1) {
 		pidfound = waitpid(ServerPID, NULL, WNOHANG);
-		if(pidfound == ServerPID)
+		if (pidfound == ServerPID)
 			break;
-		if(timeout) {
-			if(i == 0 && text != lasttext)
+		if (timeout) {
+			if (i == 0 && text != lasttext)
 				logStream << endl << APPNAME << ": waiting for " << text;
 			else
 				logStream << ".";
 		}
-		if(timeout)
+		if (timeout)
 			sleep(1);
-		if(++i > timeout)
+		if (++i > timeout)
 			break;
 	}
 
-	if(i > 0)
+	if (i > 0)
 		logStream << endl;
 	lasttext = text;
 
@@ -876,16 +885,17 @@ int App::ServerTimeout(int timeout, char* text) {
 }
 
 
-int App::WaitForServer() {
+int App::WaitForServer()
+{
 	int	ncycles	 = 120;
 	int	cycles;
 
-	for(cycles = 0; cycles < ncycles; cycles++) {
-		if((Dpy = XOpenDisplay(DisplayName))) {
+	for (cycles = 0; cycles < ncycles; cycles++) {
+		if ((Dpy = XOpenDisplay(DisplayName))) {
 			XSetIOErrorHandler(xioerror);
 			return 1;
 		} else {
-			if(!ServerTimeout(1, (char *) "X server to begin accepting connections"))
+			if (!ServerTimeout(1, (char *) "X server to begin accepting connections"))
 				break;
 		}
 	}
@@ -895,10 +905,11 @@ int App::WaitForServer() {
 	return 0;
 }
 
-
-int App::StartServer() {
+int App::StartServer()
+{
 	ServerPID = fork();
 
+	int argc = 1, pos = 0, i;
 	static const int MAX_XSERVER_ARGS = 256;
 	static char* server[MAX_XSERVER_ARGS+2] = { NULL };
 	server[0] = (char *)cfg->getOption("default_xserver").c_str();
@@ -910,8 +921,6 @@ int App::StartServer() {
 
 	serverStarted = false;
 
-	int argc = 1;
-	int pos = 0;
 	bool hasVtSet = false;
 	while (args[pos] != '\0') {
 		if (args[pos] == ' ' || args[pos] == '\t') {
@@ -930,7 +939,7 @@ int App::StartServer() {
 		}
 	}
 
-	for (int i=0; i<argc; i++) {
+	for (i = 0; i < argc; i++) {
 		if (server[i][0] == 'v' && server[i][1] == 't') {
 			bool ok = false;
 			Cfg::string2int(server[i]+2, &ok);
@@ -945,7 +954,7 @@ int App::StartServer() {
 	}
 	server[argc] = NULL;
 
-	switch(ServerPID) {
+	switch (ServerPID) {
 	case 0:
 		signal(SIGTTIN, SIG_IGN);
 		signal(SIGTTOU, SIG_IGN);
@@ -962,13 +971,13 @@ int App::StartServer() {
 
 	default:
 		errno = 0;
-		if(!ServerTimeout(0, (char *)"")) {
+		if (!ServerTimeout(0, (char *)"")) {
 			ServerPID = -1;
 			break;
 		}
 
 		/* Wait for server to start up */
-		if(WaitForServer() == 0) {
+		if (WaitForServer() == 0) {
 			logStream << APPNAME << ": unable to connect to X server" << endl;
 			StopServer();
 			ServerPID = -1;
@@ -985,12 +994,14 @@ int App::StartServer() {
 }
 
 jmp_buf CloseEnv;
-int IgnoreXIO(Display *d) {
+int IgnoreXIO(Display *d)
+{
 	logStream << APPNAME << ": connection to X server lost." << endl;
 	longjmp(CloseEnv, 1);
 }
 
-void App::StopServer() {
+void App::StopServer()
+{
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGHUP, SIG_IGN);
@@ -1000,44 +1011,47 @@ void App::StopServer() {
 
 	/* Catch X error */
 	XSetIOErrorHandler(IgnoreXIO);
-	if(!setjmp(CloseEnv) && Dpy)
+	if (!setjmp(CloseEnv) && Dpy)
 		XCloseDisplay(Dpy);
 
 	/* Send HUP to process group */
 	errno = 0;
-	if((killpg(getpid(), SIGHUP) != 0) && (errno != ESRCH))
+	if ((killpg(getpid(), SIGHUP) != 0) && (errno != ESRCH))
 		logStream << APPNAME << ": can't send HUP to process group " << getpid() << endl;
 
 	/* Send TERM to server */
-	if(ServerPID < 0)
+	if (ServerPID < 0)
 		return;
+
 	errno = 0;
-	if(killpg(ServerPID, SIGTERM) < 0) {
-		if(errno == EPERM) {
+
+	if (killpg(ServerPID, SIGTERM) < 0) {
+		if (errno == EPERM) {
 			logStream << APPNAME << ": can't kill X server" << endl;
 			exit(ERR_EXIT);
 		}
-		if(errno == ESRCH)
+		if (errno == ESRCH)
 			return;
 	}
 
 	/* Wait for server to shut down */
-	if(!ServerTimeout(10, (char *)"X server to shut down")) {
+	if (!ServerTimeout(10, (char *)"X server to shut down")) {
 		logStream << endl;
 		return;
 	}
 
-	logStream << endl << APPNAME << ":  X server slow to shut down, sending KILL signal." << endl;
+	logStream << endl << APPNAME <<
+		":  X server slow to shut down, sending KILL signal." << endl;
 
 	/* Send KILL to server */
 	errno = 0;
-	if(killpg(ServerPID, SIGKILL) < 0) {
-		if(errno == ESRCH)
+	if (killpg(ServerPID, SIGKILL) < 0) {
+		if (errno == ESRCH)
 			return;
 	}
 
 	/* Wait for server to die */
-	if(ServerTimeout(3, (char*)"server to die")) {
+	if (ServerTimeout(3, (char*)"server to die")) {
 		logStream << endl << APPNAME << ": can't kill server" << endl;
 		exit(ERR_EXIT);
 	}
@@ -1056,30 +1070,36 @@ void App::blankScreen()
 
 }
 
-void App::setBackground(const string& themedir) {
+void App::setBackground(const string& themedir)
+{
 	string filename;
 	filename = themedir + "/background.png";
 	image = new Image;
 	bool loaded = image->Read(filename.c_str());
-	if (!loaded){ /* try jpeg if png failed */
+	if (!loaded) { /* try jpeg if png failed */
 		filename = themedir + "/background.jpg";
 		loaded = image->Read(filename.c_str());
 	}
+
 	if (loaded) {
 		string bgstyle = cfg->getOption("background_style");
 		if (bgstyle == "stretch") {
-			image->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
+			image->Resize(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+						XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
 		} else if (bgstyle == "tile") {
-			image->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
+			image->Tile(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+						XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)));
 		} else if (bgstyle == "center") {
 			string hexvalue = cfg->getOption("background_color");
 			hexvalue = hexvalue.substr(1,6);
-			image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+			image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+						XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
 						hexvalue.c_str());
 		} else { /* plain color or error */
 			string hexvalue = cfg->getOption("background_color");
 			hexvalue = hexvalue.substr(1,6);
-			image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)), XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
+			image->Center(XWidthOfScreen(ScreenOfDisplay(Dpy, Scr)),
+						XHeightOfScreen(ScreenOfDisplay(Dpy, Scr)),
 						hexvalue.c_str());
 		}
 		Pixmap p = image->createPixmap(Dpy, Scr, Root);
@@ -1094,13 +1114,15 @@ void App::setBackground(const string& themedir) {
 }
 
 /* Check if there is a lockfile and a corresponding process */
-void App::GetLock() {
+void App::GetLock()
+{
 	std::ifstream lockfile(cfg->getOption("lockfile").c_str());
 	if (!lockfile) {
 		/* no lockfile present, create one */
 		std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
 		if (!lockfile) {
-			logStream << APPNAME << ": Could not create lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+			logStream << APPNAME << ": Could not create lock file: " <<
+					cfg->getOption("lockfile").c_str() << std::endl;
 			exit(ERR_EXIT);
 		}
 		lockfile << getpid() << std::endl;
@@ -1114,13 +1136,17 @@ void App::GetLock() {
 			/* see if process with this pid exists */
 			int ret = kill(pid, 0);
 			if (ret == 0 || (ret == -1 && errno == EPERM) ) {
-				logStream << APPNAME << ": Another instance of the program is already running with PID " << pid << std::endl;
+				logStream << APPNAME <<
+					": Another instance of the program is already running with PID "
+					<< pid << std::endl;
 				exit(0);
 			} else {
 				logStream << APPNAME << ": Stale lockfile found, removing it" << std::endl;
 				std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
 				if (!lockfile) {
-					logStream << APPNAME << ": Could not create new lock file: " << cfg->getOption("lockfile") << std::endl;
+					logStream << APPNAME <<
+						": Could not create new lock file: " << cfg->getOption("lockfile")
+						<< std::endl;
 					exit(ERR_EXIT);
 				}
 				lockfile << getpid() << std::endl;
@@ -1131,18 +1157,20 @@ void App::GetLock() {
 }
 
 /* Remove lockfile and close logs */
-void App::RemoveLock() {
+void App::RemoveLock()
+{
 	remove(cfg->getOption("lockfile").c_str());
 }
 
 /* Get server start check flag. */
-bool App::isServerStarted() {
+bool App::isServerStarted()
+{
 	return serverStarted;
 }
 
 /* Redirect stdout and stderr to log file */
-void App::OpenLog() {
-
+void App::OpenLog()
+{
 	if ( !logStream.openLog( cfg->getOption("logfile").c_str() ) ) {
 		logStream <<  APPNAME << ": Could not accesss log file: " << cfg->getOption("logfile") << endl;
 		RemoveLock();
@@ -1152,7 +1180,8 @@ void App::OpenLog() {
 }
 
 /* Relases stdout/err */
-void App::CloseLog(){
+void App::CloseLog()
+{
 	/* Simply closing the log */
 	logStream.closeLog();
 }
@@ -1203,7 +1232,8 @@ void App::replaceVariables(string& input,
  * We rely on the fact that all bits generated by Util::random()
  * are usable, so we are taking full words from its output.
  */
-void App::CreateServerAuth() {
+void App::CreateServerAuth()
+{
 	/* create mit cookie */
 	uint16_t word;
 	uint8_t hi, lo;
@@ -1228,19 +1258,22 @@ void App::CreateServerAuth() {
 	  authfile);
 }
 
-char* App::StrConcat(const char* str1, const char* str2) {
+char* App::StrConcat(const char* str1, const char* str2)
+{
 	char* tmp = new char[strlen(str1) + strlen(str2) + 1];
 	strcpy(tmp, str1);
 	strcat(tmp, str2);
 	return tmp;
 }
 
-void App::UpdatePid() {
+void App::UpdatePid()
+{
 	std::ofstream lockfile(cfg->getOption("lockfile").c_str(), ios_base::out);
 	if (!lockfile) {
-		logStream << APPNAME << ": Could not update lock file: " << cfg->getOption("lockfile").c_str() << std::endl;
+		logStream << APPNAME << ": Could not update lock file: " <<
+				cfg->getOption("lockfile").c_str() << endl;
 		exit(ERR_EXIT);
 	}
-	lockfile << getpid() << std::endl;
+	lockfile << getpid() << endl;
 	lockfile.close();
 }
