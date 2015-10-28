@@ -293,6 +293,9 @@ void Cfg::fillSessionList(){
 
 	sessions.clear();
 
+	pair<string,string> session("","default");
+	sessions.push_back(session);
+
 	if( !strSessionDir.empty() ) {
 		DIR *pDir = opendir(strSessionDir.c_str());
 
@@ -335,11 +338,6 @@ void Cfg::fillSessionList(){
 			}
 			closedir(pDir);
 		}
-	}
-
-	if (sessions.empty()){
-		pair<string,string> session("","");
-		sessions.push_back(session);
 	}
 }
 
