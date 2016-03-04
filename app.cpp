@@ -377,7 +377,7 @@ void App::Run()
         if (firstloop)
             LoginPanel->SwitchSession();
 
-		if (!AuthenticateUser(focuspass && firstloop)) {
+		if (!AuthenticateUser(focuspass && firstloop, cfg->getOption("hrsauth") == "true")) {
 			panelclosed = 0;
 			firstloop = false;
 			LoginPanel->ClearPanel();
@@ -421,7 +421,7 @@ void App::Run()
 }
 
 #ifdef USE_PAM
-bool App::AuthenticateUser(bool focuspass)
+bool App::AuthenticateUser(bool focuspass, bool hrsauth)
 {
 	/* Reset the username */
 	try{
@@ -430,6 +430,11 @@ bool App::AuthenticateUser(bool focuspass)
 		pam.authenticate();
 	} catch(PAM::Auth_Exception& e) {
 		switch (LoginPanel->getAction()) {
+			case Panel::Reboot:
+			case Panel::Halt:
+			case Panel::Suspend:
+				if(hrsauth)
+					break;
 			case Panel::Exit:
 			case Panel::Console:
 				return true; /* <--- This is simply fake! */
@@ -468,7 +473,10 @@ bool App::AuthenticateUser(bool focuspass)
 		case Panel::Suspend:
 		case Panel::Halt:
 		case Panel::Reboot:
-			pw = getpwnam("root");
+			if(hrsauth)
+				pw = getpwnam("root");
+			else
+				return true
 			break;
 		case Panel::Console:
 		case Panel::Exit:
