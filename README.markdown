@@ -19,7 +19,7 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
 ### INSTALLATION
 
-    see the [INSTALL file](https://github.com/PeteGozz/slim/tree/docsatwork/INSTALL.markdown)
+    see the [INSTALL file](./INSTALL.markdown)
     
 ### USAGE
 
