@@ -97,24 +97,22 @@ Remove the "build" directory tree (only) to start over.
 Path Manifest
 -------------
 Here is a listing of most of typical installed paths
-as output by a run of " make install " .
-
-::
+as output by a run of " make install " ::
    
-   Install the project...
-   /usr/bin/cmake -P cmake_install.cmake
-   -- Install configuration: ""
-   -- Up-to-date: /usr/local/bin/slim
-   -- Up-to-date: /usr/local/bin/slimlock
-   -- Up-to-date: /usr/local/lib/libslim.so.1.3.6
-   -- Up-to-date: /usr/local/lib/libslim.so
-   -- Up-to-date: /usr/local/share/man/man1/slim.1
-   -- Up-to-date: /usr/local/share/man/man1/slimlock.1
-   -- Up-to-date: /etc/slim.conf
-   -- Up-to-date: /lib/systemd/system/slim.service
-   -- Installing: /usr/local/share/slim/themes/default/slim.theme
-   -- Installing: /usr/local/share/slim/themes/default/panel.png
-   -- Installing: /usr/local/share/slim/themes/default/background.jpg
+    Install the project...
+    /usr/bin/cmake -P cmake_install.cmake
+    -- Install configuration: ""
+    -- Up-to-date: /usr/local/bin/slim
+    -- Up-to-date: /usr/local/bin/slimlock
+    -- Up-to-date: /usr/local/lib/libslim.so.1.3.6
+    -- Up-to-date: /usr/local/lib/libslim.so
+    -- Up-to-date: /usr/local/share/man/man1/slim.1
+    -- Up-to-date: /usr/local/share/man/man1/slimlock.1
+    -- Up-to-date: /etc/slim.conf
+    -- Up-to-date: /lib/systemd/system/slim.service
+    -- Installing: /usr/local/share/slim/themes/default/slim.theme
+    -- Installing: /usr/local/share/slim/themes/default/panel.png
+    -- Installing: /usr/local/share/slim/themes/default/background.jpg
 
-# this file rst and md safe - ish :)   
-# fin eof end 
+
+
