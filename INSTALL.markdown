@@ -42,21 +42,28 @@ Default Build::
     $ cd build
     $ cmake ../
 
-The cmake system will _auto include and enable_ support for libs its finds.
-see the output of a default cmake.
+The cmake system will _auto include and enable_ support for libraries found.
+See: output of a default cmake.
 
-e.g. Disallow consolkit  (and by extension dbus)::
+e.g. To Disallow consolkit  (N.B. and by extension dbus)::
 
     $cmake ../  -DUSE_PAM=yes -DUSE_CONSOLEKIT=no
 
-###Simple test
-
+### Simple test
+Test the freshly made executeable
 	./slim -v
 	
 ### Install
 
 See:  CMAKE_INSTALL_PREFIX "/usr/local"
 
-    $sudo make install
+    $ sudo make install
+
+### Other
+
+    $ make clean 
+    (in the build directory) 
+ 
+Remove the "build" directory tree (only) to start over.
 
 
