@@ -19,7 +19,7 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
 ### INSTALLATION
 
-see the [INSTALL file](./INSTALL.markdown)
+see the [INSTALL file](./INSTALL.md)
     
 ### USAGE
 
@@ -52,7 +52,7 @@ see the [INSTALL file](./INSTALL.markdown)
     
 ### THEMES
 
-See [THEMES](./THEMES.markdown)
+See [THEMES](./THEMES.md)
 
 ### COPYRIGHT
 
