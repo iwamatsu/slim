@@ -1,6 +1,6 @@
 ** INSTALL file for SLiM ##
 
-###0. Prerequisites: 
+### 0. Prerequisites: 
    
    - cmake
    - X.org or XFree86
@@ -37,7 +37,8 @@ Edit the Makefile to adjust libraries and paths to your OS (if needed)
    e.g.  CMAKE_INSTALL_PREFIX "/usr/local"
 
 Default Build::
-    $ mkdir build
+    
+	$ mkdir build
     $ cd build
     $ cmake ../
 
@@ -56,6 +57,6 @@ e.g. Disallow consolkit  (and by extension dbus)::
 
 See:  CMAKE_INSTALL_PREFIX "/usr/local"
 
-$sudo make install
+    $sudo make install
 
 

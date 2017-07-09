@@ -19,10 +19,7 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
 ### INSTALLATION
 
-    see the [INSTALL file](./INSTALL.markdown)
-    [Alternate](http://github.com/PeteGozz/slim/docsatwork/INSTALL.markdown)
-    
-    webtest http://github.com/PeteGozz/slim/blob/docsatwork/INSTALL.markdown
+see the [INSTALL file](./INSTALL.markdown)
     
 ### USAGE
 
@@ -53,7 +50,8 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
     Options are explained in the file itself
     
 ### THEMES
-    See [THEMES](THEMES.markdown)
+
+See [THEMES](./THEMES.markdown)
 
 ### COPYRIGHT
 
