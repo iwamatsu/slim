@@ -2,5 +2,6 @@
 *~
 *.hold
 *.backup
+*.markdown
 build/
 
