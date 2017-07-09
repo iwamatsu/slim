@@ -35,6 +35,7 @@ see the [INSTALL file](./INSTALL.markdown)
     
     Special "usernames"
     (commands configurable in the config file)::
+      
       - console: start console login
       - exit: exit SLiM
       - halt: halt the system
@@ -65,3 +66,4 @@ See [THEMES](./THEMES.markdown)
 
     Login.app is copyright (c) 1997, 1998 by Per Liden and is 
     licensed through the GNU General Public License. 
+
