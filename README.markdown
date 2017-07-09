@@ -20,9 +20,9 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 ### INSTALLATION
 
     see the [INSTALL file](./INSTALL.markdown)
-    [Alternate](http://github.com/PeteGozz/slim/blob/docsatwork/INSTALL.markdown)
+    [Alternate](http://github.com/PeteGozz/slim/docsatwork/INSTALL.markdown)
     
-    https://github.com/PeteGozz/slim/blob/docsatwork/INSTALL.markdown
+    webtest http://github.com/PeteGozz/slim/blob/docsatwork/INSTALL.markdown
     
 ### USAGE
 
