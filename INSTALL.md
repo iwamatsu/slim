@@ -52,13 +52,21 @@ For Operations::
     $ cmake ../
 
 Notes:
+The above should be a reasonable first test.
+This incantation should get you a full build.
+With ConsoleKit and Desktop Bus support.
 
-The cmake system will *auto include and enable* support for libraries found.
-See: output of a default   cmake ../ 
+    $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=yes   
 
-e.g. To Disallow consolkit  *(N.B. and by extension dbus)*::
+To Disallow consolkit  *(N.B. and by extension dbus)*
+and NOT build shared libraries::
 
-    $ cmake ../  -DUSE_PAM=yes -DUSE_CONSOLEKIT=no
+    $ cmake ../ -DUSE_PAM=yes -DUSE_CONSOLEKIT=no -DBUILD_SHARED_LIBS=no
+    
+After you have configured your make files run make::
+
+    $ make
+    $ ls 
 
 3. Simple test
 --------------
@@ -96,7 +104,7 @@ Remove the "build" directory tree (only) to start over.
 
 Path Manifest
 -------------
-Here is a listing of most of typical installed paths
+Here is a listing of typical installed paths
 as output by an "updating" run of " make install " 
 Notice only rebuilt files are installed ::
    
@@ -116,4 +124,22 @@ Notice only rebuilt files are installed ::
     -- Installing: /usr/local/share/slim/themes/default/background.jpg
 
 
+Linked Libraries
+................
+ This is a typical linkage string passed to the compiler
+ for the final slim (elf) executable.
 
+""
+-lfontconfig -lpam -ldbus-1 -lck-connector -lm -lrt -lcrypt -lX11 -lXft -lXrender -lXrandr -lXmu -lfreetype -ljpeg -lpng -lz libslim.so.1.3.6 -ljpeg -lpng -lz
+""
+
+$ ldd slim
+
+$ file slim
+
+ may approximate::
+
+     ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV),
+     dynamically linked, interpreter /lib/ld-linux.so.2,
+     for GNU/Linux 2.6.32,
+     BuildID[sha1]=b44698a3baf559d0a79e517221c0ad6cea2b5504, not stripped
