@@ -45,7 +45,7 @@ int conv(int num_msg, const struct pam_message **msg,
 
 	for (i = 0; i < num_msg; i++) {
 		(*resp)[i].resp = 0;
-		(*resp)[i].resp_retcodei = 0;
+		(*resp)[i].resp_retcode = 0;
 		switch (msg[i]->msg_style) {
 			case PAM_PROMPT_ECHO_ON:
 				/* We assume PAM is asking for the username */

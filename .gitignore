@@ -1,0 +1,7 @@
+
+*~
+*.hold
+*.backup
+*.markdown
+build/
+
