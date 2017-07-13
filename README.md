@@ -1,14 +1,19 @@
-## README file for SLiM ##
+--------------------------
+   README file for SLiM   
+--------------------------
 
 Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
 
-### INTRODUCTION
+INTRODUCTION
+------------
+
     SLiM (Simple Login Manager) is a graphical login manager for X11.
     It aims to be simple, fast and independent from the various
     desktop environments.
     SLiM is based on latest stable release of Login.app by Per Lidén.
 
-####  New features:
+New features:
+.............
 
        - External themes and configuration
        - PNG support with alpha transparency for panel
@@ -17,11 +22,13 @@ Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
        - Double or single (GDM-style) inputbox support
        - CMake build procedure
 
-### INSTALLATION
+INSTALLATION
+------------
 
 see the [INSTALL file](./INSTALL.md)
     
-### USAGE
+USAGE
+-----
 
     To launch slim, execute the slim binary,
     followed by the -d option if you want it to
@@ -32,6 +39,7 @@ see the [INSTALL file](./INSTALL.md)
     The ~/.xinitrc file is executed by default,
     so be sure to have a working
     .xinitrc file in your home.
+    (see the config file)
     
     Special "usernames"
     (commands configurable in the config file)::
@@ -46,24 +54,29 @@ see the [INSTALL file](./INSTALL.md)
     program is available. 
     (This is configurable in the /etc/slim.conf file) 
     
-### CONFIGURATION
-    /usr/etc/slim.conf is the main configuration file.
-    Options are explained in the file itself
+CONFIGURATION
+-------------
+
+/usr/etc/slim.conf is the main configuration file.
+Options are explained in the file itself
     
-### THEMES
+THEMES
+------
 
 See [THEMES](./THEMES.md)
 
-### COPYRIGHT
+COPYRIGHT
+---------
 
-    SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann,
-    Nobuhiro Iwamatsu and is available under the GNU General Public
-    License.
-    See the COPYING file for the complete license.
+::
+     SLiM is copyright (c) 2004-06 by Simone Rota, Johannes Winkelmann,
+     Nobuhiro Iwamatsu and is available under the GNU General Public
+     License.
+     See the COPYING file for the complete license.
 
-    Image handling code adapted and extended from xplanet 1.0.1,
-    copyright (c) 2002-04 by Hari Nair
+     Image handling code adapted and extended from xplanet 1.0.1,
+     copyright (c) 2002-04 by Hari Nair
 
-    Login.app is copyright (c) 1997, 1998 by Per Liden and is 
-    licensed through the GNU General Public License. 
+     Login.app is copyright (c) 1997, 1998 by Per Liden and is 
+     licensed through the GNU General Public License. 
 
